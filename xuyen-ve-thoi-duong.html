@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Xuyên Về Thời Đường - NovelLore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --parchment:#f5efe4;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --mist:#d4c9b8;
+  --border-gold:rgba(201,168,76,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:radial-gradient(circle at top,#18311c 0%,#0d0b0e 58%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.28;
+}
+.topbar{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);border-bottom:1px solid var(--border-gold);}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.brand{text-decoration:none;color:var(--gold-light);font-family:'Playfair Display',serif;font-size:28px;font-weight:900;}
+.brand span{color:var(--crimson);}
+.top-actions{display:flex;align-items:center;gap:12px;}
+.ghost-btn,.main-btn{text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:11px 18px;}
+.ghost-btn{color:var(--mist);border:1px solid rgba(212,201,184,.2);}
+.main-btn{color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+.follow-btn,.admin-delete-btn{
+  appearance:none;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  padding:11px 18px;background:none;cursor:pointer;
+}
+.follow-btn{border:1px solid rgba(212,201,184,.2);color:var(--mist);}
+.follow-btn.active-follow{color:var(--gold-light);border-color:var(--gold);background:rgba(201,168,76,.1);}
+.admin-delete-btn{border:1px solid rgba(139,26,47,.45);background:rgba(139,26,47,.2);color:#ffd8d8;display:none;}
+.admin-delete-btn:hover{background:rgba(139,26,47,.35);}
+.page{max-width:1200px;margin:0 auto;padding:40px 32px 72px;}
+.breadcrumb{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.45);margin-bottom:28px;}
+.hero{display:grid;grid-template-columns:320px 1fr;gap:32px;background:rgba(23,18,30,.9);border:1px solid var(--border-gold);padding:28px;overflow:hidden;}
+.cover{
+  aspect-ratio:2/3;background:linear-gradient(160deg,#101e08 0%,#1e3810 60%,#0a1205 100%);
+  border:1px solid rgba(201,168,76,.18);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+}
+.cover svg{width:160px;height:220px;opacity:.92;}
+.badge{position:absolute;top:12px;left:12px;background:rgba(20,18,28,.92);color:#d4c9b8;padding:4px 10px;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(201,168,76,.25);}
+.rating{position:absolute;right:12px;bottom:12px;color:var(--gold);font-size:13px;}
+.eyebrow{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#8bb673;margin-bottom:14px;}
+.title{font-family:'Playfair Display',serif;font-size:46px;line-height:1.08;margin-bottom:14px;}
+.author{font-size:20px;color:rgba(212,201,184,.72);margin-bottom:20px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+.chip{padding:7px 12px;border:1px solid rgba(139,182,115,.24);font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#cae2bc;}
+.desc{font-size:20px;line-height:1.8;color:rgba(212,201,184,.74);margin-bottom:26px;max-width:700px;}
+.action-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.stat{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.08);padding:16px;}
+.stat-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.4);margin-bottom:8px;}
+.stat-value{font-family:'Playfair Display',serif;font-size:24px;color:var(--parchment);}
+.content-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:28px;margin-top:32px;}
+.panel{background:rgba(23,18,30,.88);border:1px solid var(--border-gold);padding:24px;}
+.panel-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold-light);margin-bottom:16px;}
+.panel-text{font-size:19px;line-height:1.8;color:rgba(212,201,184,.74);}
+.chapter-list,.mini-list{display:flex;flex-direction:column;gap:12px;}
+.chapter-item{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;
+  background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);text-decoration:none;transition:background .2s,border-color .2s;
+}
+.chapter-item:hover{background:rgba(139,182,115,.06);border-color:rgba(139,182,115,.24);}
+.chapter-name{font-size:20px;color:var(--parchment);}
+.chapter-time{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.4);}
+.mini-card{padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);}
+.mini-card strong{display:block;color:var(--gold-light);font-size:18px;margin-bottom:6px;}
+.mini-card span{color:rgba(212,201,184,.68);font-size:17px;line-height:1.6;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:50;overflow-y:auto;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+.modal-box{background:#12101a;border:1px solid var(--border-gold);max-width:760px;width:100%;padding:40px 48px;position:relative;}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(212,201,184,.4);font-size:22px;cursor:pointer;transition:color .2s;}
+.modal-close:hover{color:var(--gold);}
+.modal-chapter-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8bb673;margin-bottom:8px;}
+.modal-chapter-title{font-family:'Playfair Display',serif;font-size:26px;color:var(--parchment);margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(201,168,76,.15);}
+.modal-body{font-size:19px;line-height:2;color:rgba(240,232,220,.85);}
+.modal-body p{margin-bottom:1.5em;text-indent:2em;}
+.modal-body p:first-child::first-letter{font-family:'Playfair Display',serif;font-size:58px;float:left;line-height:.78;padding-right:10px;padding-top:4px;color:#8bb673;font-weight:900;}
+.modal-nav{display:flex;justify-content:space-between;margin-top:36px;padding-top:24px;border-top:1px solid rgba(201,168,76,.12);}
+.modal-nav-btn{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:none;border:1px solid rgba(201,168,76,.3);padding:11px 22px;cursor:pointer;transition:background .2s;text-decoration:none;}
+.modal-nav-btn:hover{background:rgba(201,168,76,.08);}
+.modal-nav-btn:disabled{opacity:.3;cursor:default;}
+@media(max-width:900px){
+  .hero,.content-grid{grid-template-columns:1fr;}
+  .cover{max-width:320px;}
+  .stats{grid-template-columns:1fr;}
+  .modal-box{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div class="top-actions">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="#danh-sach-chuong" class="main-btn">Đọc Ngay</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="breadcrumb">Trang Chủ / Xuyên Không / Xuyên Về Thời Đường</div>
+
+  <section class="hero">
+    <div class="cover">
+      <span class="badge">Hoàn</span>
+      <div class="rating">★★★★☆</div>
+      <svg viewBox="0 0 220 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M72 226 Q110 124 148 226" stroke="#8bb673" stroke-width="2.5" opacity=".7" fill="none"/>
+        <path d="M88 226 Q110 152 132 226" stroke="#c9a84c" stroke-width="2" opacity=".52" fill="none"/>
+        <circle cx="110" cy="124" r="22" fill="none" stroke="#8bb673" stroke-width="2" opacity=".8"/>
+        <circle cx="110" cy="124" r="8" fill="#c9a84c" opacity=".85"/>
+        <path d="M95 62 Q110 47 125 62 Q128 84 110 94 Q92 84 95 62Z" fill="#26451a" stroke="#8bb673" stroke-width="1.8" opacity=".82"/>
+        <line x1="110" y1="24" x2="110" y2="52" stroke="#c9a84c" stroke-width="1.8" opacity=".4"/>
+      </svg>
+    </div>
+
+    <div>
+      <div class="eyebrow">Mang Ký Ức Tương Lai Trở Về Quá Khứ</div>
+      <h1 class="title">Xuyên Về Thời Đường</h1>
+      <div class="author">Tác giả: Phong Trường Ca</div>
+
+      <div class="chips">
+        <span class="chip">Xuyên Không</span>
+        <span class="chip">Lịch Sử</span>
+        <span class="chip">Hoàn Thành</span>
+      </div>
+
+      <p class="desc">Nội dung được giữ ngắn để làm mẫu: một người hiện đại tỉnh dậy giữa thời Đường, đem theo hiểu biết của tương lai để thay đổi số phận bản thân và những người xung quanh.</p>
+
+      <div class="action-row">
+        <a href="#danh-sach-chuong" class="main-btn">Bắt Đầu Đọc</a>
+        <button type="button" class="follow-btn" id="followBtn">Theo Dõi</button>
+        <button type="button" class="admin-delete-btn" id="adminDeleteBtn">Xóa Truyện</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Tình Trạng</div>
+          <div class="stat-value">Hoàn</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Chương</div>
+          <div class="stat-value">1.204</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Đánh Giá</div>
+          <div class="stat-value">8.7/10</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div>
+      <section class="panel">
+        <h2 class="panel-title">Giới Thiệu</h2>
+        <div class="panel-text">
+          <p>Trang này tiếp tục dùng cùng khung với các truyện trước. Phần chương chỉ là nội dung mẫu ngắn, đủ để giữ đồng bộ giao diện và chức năng đọc chương bằng modal.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="danh-sach-chuong" style="margin-top:28px;">
+        <h2 class="panel-title">Danh Sách Chương</h2>
+        <div class="chapter-list">
+          <a href="#" class="chapter-item" data-chapter="0">
+            <span class="chapter-name">Chương 1: Tỉnh Dậy Giữa Trường An</span>
+            <span class="chapter-time">Mở Đầu</span>
+          </a>
+          <a href="#" class="chapter-item" data-chapter="1">
+            <span class="chapter-name">Chương 2: Một Cái Tên Xa Lạ</span>
+            <span class="chapter-time">Tiếp Theo</span>
+          </a>
+          <a href="#" class="chapter-item" data-chapter="2">
+            <span class="chapter-name">Chương 3: Viết Lại Vận Mệnh</span>
+            <span class="chapter-time">Cao Trào</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <section class="panel">
+        <h2 class="panel-title">Thông Tin Nhanh</h2>
+        <div class="mini-list">
+          <div class="mini-card">
+            <strong>Thể loại</strong>
+            <span>Xuyên Không, Lịch Sử, Hoàn Thành</span>
+          </div>
+          <div class="mini-card">
+            <strong>Nhân vật chính</strong>
+            <span>Một linh hồn hiện đại mang ký ức tương lai rơi vào thời đại hưng thịnh của nhà Đường.</span>
+          </div>
+          <div class="mini-card">
+            <strong>Ghi chú</strong>
+            <span>Nội dung ngắn, chủ yếu để bạn tiếp tục gắn link và nhân bản thêm truyện khi cần.</span>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </section>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-chapter-label" id="modalLabel"></div>
+    <div class="modal-chapter-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-nav">
+      <button class="modal-nav-btn" id="prevBtn">← Chương Trước</button>
+      <button class="modal-nav-btn" id="nextBtn">Chương Tiếp →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY_TITLE = 'Xuyên Về Thời Đường';
+
+const chapters = [
+  {
+    title: 'Chương 1: Tỉnh Dậy Giữa Trường An',
+    content: `<p>Khi mở mắt, hắn không còn nhìn thấy ánh đèn thành phố quen thuộc, mà là mái ngói cong cổ kính và tiếng người gọi nhau giữa phố xá Trường An.</p>
+    <p>Mọi thứ đều xa lạ, chỉ có ký ức của cuộc sống cũ vẫn còn nguyên vẹn trong đầu.</p>`
+  },
+  {
+    title: 'Chương 2: Một Cái Tên Xa Lạ',
+    content: `<p>Người hầu gọi hắn bằng một cái tên chưa từng nghe tới, còn trong gương đồng lại là gương mặt hoàn toàn khác. Từ giây phút đó, hắn hiểu mình không còn đường quay về như cũ nữa.</p>
+    <p>Điều duy nhất có thể làm là sống tiếp, nhưng theo cách khác hẳn vận mệnh ban đầu.</p>`
+  },
+  {
+    title: 'Chương 3: Viết Lại Vận Mệnh',
+    content: `<p>Một lời nói thay đổi đúng lúc, một quyết định đưa ra sớm hơn, và những biến động đầu tiên bắt đầu xuất hiện quanh hắn. Lịch sử vẫn đang chảy, nhưng giờ đã không còn hoàn toàn giống như trước.</p>
+    <p>Và hắn quyết định sẽ không chỉ sống sót, mà còn phải viết lại phần đời này theo ý mình.</p>`
+  }
+];
+
+let currentChapter = 0;
+
+function openChapter(idx) {
+  currentChapter = idx;
+  const ch = chapters[idx];
+  document.getElementById('modalLabel').textContent = `Xuyên Về Thời Đường · Chương ${idx + 1} / ${chapters.length} (mẫu)`;
+  document.getElementById('modalTitle').textContent = ch.title;
+  document.getElementById('modalBody').innerHTML = ch.content;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === chapters.length - 1;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.querySelector('.modal-box').scrollTop = 0;
+  window.scrollTo({ top: 0 });
+}
+
+document.querySelectorAll('.chapter-item').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    openChapter(parseInt(el.dataset.chapter, 10));
+  });
+});
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (currentChapter > 0) openChapter(currentChapter - 1);
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (currentChapter < chapters.length - 1) openChapter(currentChapter + 1);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+});
+
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+function getTrackedStorageKey(user) {
+  return user && user.email ? `trackedBooks:${user.email}` : null;
+}
+
+function getTrackedBooks(user) {
+  const key = getTrackedStorageKey(user);
+  if (!key) return [];
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+function saveTrackedBooks(user, titles) {
+  const key = getTrackedStorageKey(user);
+  if (!key) return;
+  localStorage.setItem(key, JSON.stringify(titles));
+}
+
+function getHiddenStories() {
+  return JSON.parse(localStorage.getItem('hiddenStories')) || [];
+}
+
+function saveHiddenStories(titles) {
+  localStorage.setItem('hiddenStories', JSON.stringify(titles));
+}
+
+const followBtn = document.getElementById('followBtn');
+const adminDeleteBtn = document.getElementById('adminDeleteBtn');
+const currentUser = getCurrentUser();
+
+function refreshFollowButton() {
+  if (!followBtn) return;
+
+  if (!currentUser) {
+    followBtn.textContent = 'Đăng Nhập Để Theo Dõi';
+    followBtn.classList.remove('active-follow');
+    return;
+  }
+
+  const tracked = getTrackedBooks(currentUser);
+  const isTracked = tracked.includes(STORY_TITLE);
+  followBtn.textContent = isTracked ? 'Bỏ Theo Dõi' : 'Theo Dõi';
+  followBtn.classList.toggle('active-follow', isTracked);
+}
+
+if (followBtn) {
+  followBtn.addEventListener('click', function() {
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const tracked = getTrackedBooks(currentUser);
+    const isTracked = tracked.includes(STORY_TITLE);
+    const nextTracked = isTracked
+      ? tracked.filter(title => title !== STORY_TITLE)
+      : [...tracked, STORY_TITLE];
+
+    saveTrackedBooks(currentUser, nextTracked);
+    refreshFollowButton();
+  });
+}
+
+if (adminDeleteBtn && currentUser && currentUser.role === 'admin') {
+  adminDeleteBtn.style.display = 'inline-block';
+}
+
+if (adminDeleteBtn) {
+  adminDeleteBtn.addEventListener('click', function() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    const confirmed = window.confirm('Xóa truyện này khỏi trang chủ và danh sách theo dõi?');
+    if (!confirmed) return;
+
+    const hiddenStories = getHiddenStories();
+    if (!hiddenStories.includes(STORY_TITLE)) {
+      saveHiddenStories([...hiddenStories, STORY_TITLE]);
+    }
+
+    window.location.href = 'index.html';
+  });
+}
+
+refreshFollowButton();
+</script>
+</body>
+</html>

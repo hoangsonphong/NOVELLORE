@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NovelLore Premium - Thanh Toán</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --parchment:#f5efe4;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --mist:#d4c9b8;
+  --smoke:#17121e;
+  --border-gold:rgba(201,168,76,0.2);
+  --emerald:#36a34a;
+}
+body{
+  background:
+    radial-gradient(circle at top,#2a1020 0%,#0d0b0e 56%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.26;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:4;
+  background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);
+  border-bottom:1px solid var(--border-gold);
+}
+.topbar-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.brand{
+  text-decoration:none;
+  color:var(--gold-light);
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:900;
+}
+.brand span{color:var(--crimson);}
+.ghost-btn,.main-btn{
+  text-decoration:none;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:11px 18px;
+}
+.ghost-btn{
+  color:var(--mist);
+  border:1px solid rgba(212,201,184,.2);
+}
+.main-btn{
+  color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+}
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 32px 72px;
+}
+.hero{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:24px;
+  align-items:start;
+}
+.panel{
+  background:rgba(23,18,30,.9);
+  border:1px solid var(--border-gold);
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+}
+.panel::before{
+  content:'';
+  position:absolute;
+  top:-70px;
+  right:-70px;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  border:1px solid rgba(201,168,76,.08);
+  background:rgba(201,168,76,.03);
+}
+.eyebrow{
+  position:relative;
+  z-index:1;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--crimson);
+  margin-bottom:14px;
+}
+.title{
+  position:relative;
+  z-index:1;
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+  line-height:1.08;
+  margin-bottom:14px;
+}
+.desc{
+  position:relative;
+  z-index:1;
+  font-size:21px;
+  line-height:1.8;
+  color:rgba(212,201,184,.72);
+  margin-bottom:22px;
+}
+.benefits{
+  position:relative;
+  z-index:1;
+  display:grid;
+  gap:10px;
+}
+.benefit{
+  padding:14px 16px;
+  border:1px solid rgba(201,168,76,.1);
+  background:rgba(255,255,255,.02);
+}
+.benefit strong{
+  display:block;
+  font-size:18px;
+  color:var(--gold-light);
+  margin-bottom:4px;
+}
+.benefit span{
+  display:block;
+  font-size:17px;
+  color:rgba(212,201,184,.66);
+}
+.payment-card{
+  background:linear-gradient(180deg,#f8f8f4 0%,#ffffff 100%);
+  color:#124f3d;
+  border:1px solid rgba(201,168,76,.2);
+  padding:24px;
+  text-align:center;
+  box-shadow:0 24px 50px rgba(0,0,0,.35);
+}
+.bank-mark{
+  display:inline-flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.bank-icon{
+  width:58px;
+  height:58px;
+  border-radius:18px 18px 18px 4px;
+  background:linear-gradient(135deg,#6fc92e 0%,#0d6150 72%);
+  transform:rotate(18deg);
+}
+.bank-title{
+  text-align:left;
+}
+.bank-name{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:24px;
+  font-weight:700;
+  color:#0f5b47;
+}
+.bank-sub{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:1px;
+  color:#7db940;
+}
+.qr-frame{
+  margin:18px auto 20px;
+  width:min(100%,380px);
+  padding:14px;
+  border:4px solid #99c746;
+  background:#fff;
+}
+.qr-frame img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.payment-name{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  color:#72b62c;
+  margin-bottom:8px;
+}
+.payment-line{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:#72b62c;
+  margin-bottom:6px;
+}
+.detail-list{
+  margin-top:22px;
+  display:grid;
+  gap:10px;
+}
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(201,168,76,.08);
+}
+.detail-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(212,201,184,.42);
+}
+.detail-value{
+  font-size:18px;
+  color:var(--parchment);
+  text-align:right;
+}
+.hint{
+  margin-top:20px;
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(212,201,184,.64);
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;}
+  .title{font-size:38px;}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="dangky.html" class="main-btn">Đăng Ký Tài Khoản</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div class="panel">
+      <div class="eyebrow">NovelLore Premium</div>
+      <h1 class="title">Thanh Toán Gói Premium</h1>
+      <p class="desc">
+        Quét mã QR để thanh toán và nâng cấp tài khoản. Sau khi chuyển khoản thành công, bạn có thể đối chiếu giao dịch để kích hoạt quyền đọc truyện Premium.
+      </p>
+
+      <div class="benefits">
+        <div class="benefit">
+          <strong>Mở khóa nội dung nâng cao</strong>
+          <span>Truy cập nhanh các bộ truyện được ưu tiên hiển thị và các tính năng mở rộng trong thư viện cá nhân.</span>
+        </div>
+        <div class="benefit">
+          <strong>Giao diện giữ nguyên chất NovelLore</strong>
+          <span>Trang thanh toán vẫn đồng bộ phong cách với toàn bộ website để người dùng không bị tách trải nghiệm.</span>
+        </div>
+        <div class="benefit">
+          <strong>Thông tin chuyển khoản rõ ràng</strong>
+          <span>Sử dụng đúng thông tin Vietcombank: HOANG SON PHONG, 1029099078, PGD Quang Trung.</span>
+        </div>
+      </div>
+
+      <div class="detail-list">
+        <div class="detail-row">
+          <span class="detail-label">Ngân hàng</span>
+          <span class="detail-value">Vietcombank</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Chủ tài khoản</span>
+          <span class="detail-value">HOANG SON PHONG</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Số tài khoản</span>
+          <span class="detail-value">1029099078</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Chi nhánh</span>
+          <span class="detail-value">PGD Quang Trung</span>
+        </div>
+      </div>
+
+      <p class="hint">
+        Nếu cần, bạn có thể dùng ảnh QR này để chuyển khoản trực tiếp từ ứng dụng ngân hàng. Trong bản hiện tại, mã QR được tạo từ chính các thông tin chuyển khoản để sử dụng nhanh trên web.
+      </p>
+    </div>
+
+    <div class="payment-card">
+      <div class="bank-mark">
+        <div class="bank-icon"></div>
+        <div class="bank-title">
+          <div class="bank-name">Vietcombank</div>
+          <div class="bank-sub">Chung niềm tin vững tương lai</div>
+        </div>
+      </div>
+
+      <div class="qr-frame">
+        <img
+          alt="QR thanh toán Vietcombank"
+          src="QR.jpg"
+        />
+      </div>
+
+    </div>
+  </section>
+</main>
+</body>
+</html>

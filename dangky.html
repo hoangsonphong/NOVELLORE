@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovelLore - Đăng Ký</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --ink:#0d0b0e;
+    --gold:#c9a84c;
+    --gold-light:#e8c97a;
+    --crimson:#8b1a2f;
+    --parchment:#f5efe4;
+    --mist:#d4c9b8;
+}
+
+body{
+    background: radial-gradient(circle at top,#24152e 0%,#0d0b0e 60%);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Cormorant Garamond', serif;
+    color:var(--parchment);
+}
+
+.register-container{
+    width:420px;
+    background:rgba(20,15,25,0.9);
+    border:1px solid rgba(201,168,76,0.3);
+    padding:40px;
+    box-shadow:0 0 30px rgba(0,0,0,0.6);
+    position:relative;
+}
+
+.register-container::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        var(--crimson),
+        var(--gold),
+        transparent
+    );
+}
+
+.logo{
+    text-align:center;
+    font-family:'Playfair Display', serif;
+    font-size:32px;
+    color:var(--gold-light);
+}
+
+.logo span{
+    color:var(--crimson);
+}
+
+.subtitle{
+    text-align:center;
+    margin:10px 0 30px;
+    font-family:'Josefin Sans', sans-serif;
+    font-size:13px;
+    letter-spacing:3px;
+    color:var(--mist);
+}
+
+.home-link{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.home-link a{
+    color: var(--mist);
+    text-decoration:none;
+    font-family:'Josefin Sans', sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    transition:0.3s;
+}
+
+.home-link a:hover{
+    color: var(--gold-light);
+}
+
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--gold);
+}
+
+.input-group input{
+    width:100%;
+    padding:12px;
+    background:#16111b;
+    border:1px solid rgba(201,168,76,0.2);
+    color:white;
+    outline:none;
+    font-size:15px;
+}
+
+.input-group input:focus{
+    border-color:var(--gold);
+}
+
+.register-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.login-link{
+    text-align:center;
+    margin-top:20px;
+}
+
+.login-link a{
+    color:var(--crimson);
+    text-decoration:none;
+}
+
+#registerMsg{
+    margin-top:15px;
+    text-align:center;
+    color:var(--gold-light);
+    font-family:'Josefin Sans', sans-serif;
+    font-size:12px;
+    letter-spacing:1px;
+}
+</style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="logo">Novel<span>Lore</span></div>
+    <div class="subtitle">TẠO TÀI KHOẢN THƯ VIỆN</div>
+
+    <div class="home-link">
+        <a href="index.html">← Quay về trang chủ</a>
+    </div>
+
+    <form id="registerForm">
+        <div class="input-group">
+            <label>Tên đăng nhập</label>
+            <input type="text" id="registerName" name="username" required>
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="registerEmail" name="email" required>
+        </div>
+
+        <div class="input-group">
+            <label>Mật khẩu</label>
+            <input type="password" id="registerPassword" name="password" required>
+        </div>
+
+        <button type="submit" class="register-btn">Đăng Ký</button>
+    </form>
+
+    <p id="registerMsg"></p>
+
+    <div class="login-link">
+        Đã có tài khoản?
+        <a href="login.html">Đăng nhập</a>
+    </div>
+</div>
+
+<script>
+function ensureAdminAccount() {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const hasAdmin = users.some(user => user.email === 'admin@novellore.com');
+
+    if (!hasAdmin) {
+        users.push({
+            name: 'Admin',
+            email: 'admin@novellore.com',
+            password: '123456',
+            role: 'admin'
+        });
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem('users')) || [];
+}
+
+function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
+function setCurrentUser(user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+
+ensureAdminAccount();
+
+const registerForm = document.getElementById('registerForm');
+const registerMsg = document.getElementById('registerMsg');
+
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value.trim();
+
+    const users = getUsers();
+
+    const existed = users.find(user => user.email === email);
+    if (existed) {
+        registerMsg.textContent = 'Email đã tồn tại.';
+        registerMsg.style.color = '#ff8a8a';
+        return;
+    }
+
+    const newUser = { name, email, password, role: 'user' };
+    users.push(newUser);
+
+    saveUsers(users);
+    setCurrentUser(newUser);
+
+    registerMsg.textContent = 'Đăng ký thành công. Đang chuyển trang...';
+    registerMsg.style.color = '#e8c97a';
+
+    setTimeout(function() {
+        window.location.href = 'index.html';
+    }, 1000);
+});
+</script>
+
+</body>
+</html>

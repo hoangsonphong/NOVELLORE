@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Đang Theo Dõi - NovelLore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --parchment:#f5efe4;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --mist:#d4c9b8;
+  --smoke:#17121e;
+  --border-gold:rgba(201,168,76,0.2);
+  --border-gold-strong:rgba(201,168,76,0.45);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:radial-gradient(circle at top,#24152e 0%,#0d0b0e 58%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.28;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);
+  border-bottom:1px solid var(--border-gold);
+}
+.topbar-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+}
+.brand{
+  text-decoration:none;
+  color:var(--gold-light);
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:900;
+}
+.brand span{color:var(--crimson);}
+.top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ghost-btn,.main-btn{
+  text-decoration:none;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:11px 18px;
+}
+.ghost-btn{
+  color:var(--mist);
+  border:1px solid rgba(212,201,184,.2);
+}
+.main-btn{
+  color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+}
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 32px 72px;
+}
+.eyebrow{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--crimson);
+  margin-bottom:14px;
+}
+.title{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+  line-height:1.08;
+  margin-bottom:12px;
+}
+.subtitle{
+  font-size:22px;
+  color:rgba(212,201,184,.72);
+  margin-bottom:28px;
+}
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:32px;
+}
+.stat{
+  background:rgba(23,18,30,.88);
+  border:1px solid var(--border-gold);
+  padding:18px;
+}
+.stat-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(212,201,184,.4);
+  margin-bottom:8px;
+}
+.stat-value{
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+  color:var(--gold-light);
+}
+.tracked-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.tracked-card{
+  display:flex;
+  gap:0;
+  text-decoration:none;
+  color:inherit;
+  background:rgba(23,18,30,.88);
+  border:1px solid var(--border-gold);
+  overflow:hidden;
+  transition:border-color .25s,transform .25s;
+}
+.tracked-card:hover{
+  border-color:var(--border-gold-strong);
+  transform:translateY(-2px);
+}
+.tracked-cover{
+  width:120px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+.cv-crimson{background:linear-gradient(160deg,#2a1018 0%,#4a1828 60%,#150a10 100%);}
+.cv-navy{background:linear-gradient(160deg,#0c1828 0%,#1a2e50 60%,#080f1c 100%);}
+.cv-forest{background:linear-gradient(160deg,#101e08 0%,#1e3810 60%,#0a1205 100%);}
+.cv-amber{background:linear-gradient(160deg,#1e1408 0%,#3a2818 60%,#120c04 100%);}
+.cv-violet{background:linear-gradient(160deg,#140e28 0%,#281848 60%,#0c081a 100%);}
+.tracked-cover svg{width:60px;height:88px;opacity:.88;}
+.tracked-info{
+  padding:18px;
+  flex:1;
+  min-width:0;
+}
+.tracked-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--crimson);
+  margin-bottom:8px;
+}
+.tracked-title{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  line-height:1.25;
+  color:var(--parchment);
+  margin-bottom:8px;
+}
+.tracked-desc{
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(212,201,184,.66);
+  margin-bottom:12px;
+}
+.tracked-meta{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.tracked-chip{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.empty-box{
+  background:rgba(23,18,30,.88);
+  border:1px solid var(--border-gold);
+  padding:26px;
+}
+.empty-title{
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+  color:var(--gold-light);
+  margin-bottom:10px;
+}
+.empty-desc{
+  font-size:20px;
+  line-height:1.7;
+  color:rgba(212,201,184,.68);
+  margin-bottom:18px;
+}
+.empty-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+@media(max-width:900px){
+  .summary,.tracked-grid{grid-template-columns:1fr;}
+  .tracked-card{flex-direction:column;}
+  .tracked-cover{width:100%;height:220px;}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div class="top-actions">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="login.html" class="ghost-btn" id="loginLink">Đăng Nhập</a>
+      <span id="welcomeUser" style="display:none;color:var(--gold-light);font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;"></span>
+      <button id="logoutBtn" class="ghost-btn" style="display:none;background:none;cursor:pointer;">Đăng Xuất</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="eyebrow">Thư Viện Cá Nhân</div>
+  <h1 class="title">Đang Theo Dõi</h1>
+  <p class="subtitle" id="pageSubtitle">Nơi lưu lại các bộ truyện bạn muốn đọc tiếp.</p>
+
+  <section class="summary" id="summarySection" style="display:none;">
+    <div class="stat">
+      <div class="stat-label">Tài Khoản</div>
+      <div class="stat-value" id="statUser">-</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Số Truyện</div>
+      <div class="stat-value" id="statCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Trạng Thái</div>
+      <div class="stat-value">Đang Lưu</div>
+    </div>
+  </section>
+
+  <div id="trackedContent"></div>
+</main>
+
+<script>
+const storyLinks = {
+  'Vạn Cổ Thần Vương': 'van-co-than-vuong.html'
+};
+
+const bookData = {
+  'Vạn Cổ Thần Vương': {
+    title: 'Vạn Cổ Thần Vương',
+    genre: 'Tiên Hiệp',
+    chapter: 'Chương 2.847',
+    cv: 'cv-crimson',
+    desc: 'Từ một thiếu niên bị khinh rẻ, Diệp Trần từng bước vươn lên và chạm tới cảnh giới thần vương.',
+    link: 'van-co-than-vuong.html'
+  }
+};
+
+const svgArt = `<svg width="60" height="88" viewBox="0 0 60 88" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="40" r="18" stroke="#c9a84c" stroke-width="1" opacity=".5"/><line x1="30" y1="10" x2="30" y2="70" stroke="#c9a84c" stroke-width=".7" opacity=".4"/><circle cx="30" cy="40" r="5" fill="#8b1a2f" opacity=".8"/><path d="M22 74 Q30 70 38 74 Q30 78 22 74Z" fill="#c9a84c" opacity=".4"/></svg>`;
+
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+function logoutUser() {
+  localStorage.removeItem('currentUser');
+}
+
+function getTrackedStorageKey(user) {
+  return user && user.email ? `trackedBooks:${user.email}` : null;
+}
+
+function getTrackedBooks(user) {
+  const key = getTrackedStorageKey(user);
+  if (!key) return [];
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+function getHiddenStories() {
+  return JSON.parse(localStorage.getItem('hiddenStories')) || [];
+}
+
+const loginLink = document.getElementById('loginLink');
+const welcomeUser = document.getElementById('welcomeUser');
+const logoutBtn = document.getElementById('logoutBtn');
+const trackedContent = document.getElementById('trackedContent');
+const pageSubtitle = document.getElementById('pageSubtitle');
+const summarySection = document.getElementById('summarySection');
+const statUser = document.getElementById('statUser');
+const statCount = document.getElementById('statCount');
+
+const currentUser = getCurrentUser();
+
+if (currentUser) {
+  if (loginLink) loginLink.style.display = 'none';
+  if (welcomeUser) {
+    welcomeUser.style.display = 'inline-block';
+    welcomeUser.textContent = 'Xin chào, ' + currentUser.name;
+  }
+  if (logoutBtn) {
+    logoutBtn.style.display = 'inline-block';
+  }
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', function() {
+    logoutUser();
+    window.location.href = 'login.html';
+  });
+}
+
+function renderTrackedPage() {
+  if (!currentUser) {
+    trackedContent.innerHTML = `
+      <div class="empty-box">
+        <div class="empty-title">Bạn cần đăng nhập</div>
+        <div class="empty-desc">Đăng nhập để xem các bộ truyện đang theo dõi và lưu lại những truyện bạn muốn quay lại sau.</div>
+        <div class="empty-actions">
+          <a href="login.html" class="main-btn">Đăng Nhập</a>
+          <a href="dangky.html" class="ghost-btn">Đăng Ký</a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const trackedTitles = getTrackedBooks(currentUser);
+  const hiddenStories = getHiddenStories();
+  summarySection.style.display = 'grid';
+  pageSubtitle.textContent = 'Danh sách truyện đang được lưu theo tài khoản của bạn.';
+  statUser.textContent = currentUser.name || currentUser.email;
+  statCount.textContent = trackedTitles.filter(title => !hiddenStories.includes(title)).length;
+
+  const visibleTitles = trackedTitles
+    .filter((title, index, arr) => arr.indexOf(title) === index)
+    .filter(title => !hiddenStories.includes(title));
+
+  if (!visibleTitles.length) {
+    trackedContent.innerHTML = `
+      <div class="empty-box">
+        <div class="empty-title">Chưa có truyện nào</div>
+        <div class="empty-desc">Bạn chưa theo dõi bộ truyện nào. Hãy mở một trang truyện và bấm Theo Dõi để lưu lại tại đây.</div>
+        <div class="empty-actions">
+          <a href="index.html" class="main-btn">Khám Phá Truyện</a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  trackedContent.innerHTML = `
+    <section class="tracked-grid">
+      ${visibleTitles.map(title => {
+        const book = bookData[title];
+        if (!book) return '';
+        return `
+          <a href="${book.link}" class="tracked-card">
+            <div class="tracked-cover ${book.cv}">${svgArt}</div>
+            <div class="tracked-info">
+              <div class="tracked-label">Đang theo dõi</div>
+              <div class="tracked-title">${book.title}</div>
+              <div class="tracked-desc">${book.desc}</div>
+              <div class="tracked-meta">
+                <span class="tracked-chip">${book.genre}</span>
+                <span class="tracked-chip">${book.chapter}</span>
+              </div>
+            </div>
+          </a>`;
+      }).join('')}
+    </section>`;
+  statCount.textContent = visibleTitles.length;
+}
+
+renderTrackedPage();
+</script>
+</body>
+</html>

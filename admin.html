@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - NovelLore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --parchment:#f5efe4;
+  --mist:#d4c9b8;
+  --smoke:#17121e;
+  --border-gold:rgba(201,168,76,0.2);
+}
+body{
+  background:radial-gradient(circle at top,#24152e 0%,#0d0b0e 58%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.25;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:4;
+  background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);
+  border-bottom:1px solid var(--border-gold);
+}
+.topbar-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:18px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.brand{
+  text-decoration:none;
+  color:var(--gold-light);
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  font-weight:900;
+}
+.brand span{color:var(--crimson);}
+.top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ghost-btn,.main-btn{
+  text-decoration:none;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:11px 18px;
+}
+.ghost-btn{
+  color:var(--mist);
+  border:1px solid rgba(212,201,184,.2);
+  background:none;
+}
+.main-btn{
+  color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border:none;
+}
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 32px 72px;
+}
+.eyebrow{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--crimson);
+  margin-bottom:14px;
+}
+.title{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+  line-height:1.08;
+  margin-bottom:10px;
+}
+.subtitle{
+  font-size:22px;
+  color:rgba(212,201,184,.72);
+  margin-bottom:30px;
+}
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:28px;
+}
+.stat{
+  background:rgba(23,18,30,.88);
+  border:1px solid var(--border-gold);
+  padding:18px;
+}
+.stat-label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(212,201,184,.4);
+  margin-bottom:8px;
+}
+.stat-value{
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+  color:var(--gold-light);
+}
+.grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:20px;
+}
+.panel{
+  background:rgba(23,18,30,.88);
+  border:1px solid var(--border-gold);
+  padding:22px;
+}
+.panel-title{
+  font-family:'Playfair Display',serif;
+  font-size:28px;
+  color:var(--gold-light);
+  margin-bottom:14px;
+}
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.compact-list{
+  max-height:420px;
+  overflow:auto;
+  padding-right:6px;
+}
+.compact-list .row{
+  padding:10px 12px;
+}
+.compact-list .row strong{
+  font-size:17px;
+  margin-bottom:4px;
+}
+.compact-list .row span{
+  font-size:14px;
+  line-height:1.45;
+}
+.compact-list::-webkit-scrollbar{width:6px;}
+.compact-list::-webkit-scrollbar-track{background:#120f17;}
+.compact-list::-webkit-scrollbar-thumb{background:rgba(201,168,76,.28);border-radius:3px;}
+.row{
+  padding:14px 16px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(201,168,76,.08);
+}
+.row strong{
+  display:block;
+  color:var(--parchment);
+  font-size:19px;
+  margin-bottom:6px;
+}
+.row span{
+  display:block;
+  color:rgba(212,201,184,.66);
+  font-size:16px;
+  line-height:1.6;
+}
+.role-badge{
+  display:inline-block;
+  margin-top:8px;
+  padding:4px 8px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border:1px solid rgba(201,168,76,.18);
+  color:var(--gold);
+}
+.note{
+  margin-top:28px;
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(212,201,184,.6);
+}
+.admin-action-btn{
+  margin-top:10px;
+  padding:8px 12px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--ink);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border:none;
+  cursor:pointer;
+}
+.story-form{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.story-form .full{
+  grid-column:1/-1;
+}
+.story-form label{
+  display:block;
+  margin-bottom:6px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.story-form input,.story-form select,.story-form textarea{
+  width:100%;
+  padding:12px;
+  background:#16111b;
+  border:1px solid rgba(201,168,76,0.2);
+  color:white;
+  outline:none;
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;
+}
+.story-form textarea{
+  min-height:110px;
+  resize:vertical;
+}
+.story-form-actions{
+  grid-column:1/-1;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.story-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.story-tools{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+.danger-btn{
+  padding:8px 12px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#ffd7d7;
+  background:rgba(139,26,47,.22);
+  border:1px solid rgba(139,26,47,.45);
+  cursor:pointer;
+}
+@media(max-width:900px){
+  .summary,.grid{grid-template-columns:1fr;}
+  .story-form{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<script>
+const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if (!currentUser || currentUser.role !== 'admin') {
+  alert('Bạn không có quyền truy cập trang admin.');
+  window.location.href = 'index.html';
+}
+</script>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div class="top-actions">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="dang-theo-doi.html" class="ghost-btn">Theo Dõi</a>
+      <button id="logoutBtn" class="ghost-btn">Đăng Xuất</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="eyebrow">Quản Trị Hệ Thống</div>
+  <h1 class="title">Admin Dashboard</h1>
+  <p class="subtitle">Trang quản trị demo để kiểm tra người dùng, quyền truy cập và dữ liệu theo dõi truyện.</p>
+
+  <section class="summary">
+    <div class="stat">
+      <div class="stat-label">Tài Khoản Hiện Tại</div>
+      <div class="stat-value" id="statAdmin">Admin</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Tổng Người Dùng</div>
+      <div class="stat-value" id="statUsers">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Tài Khoản Admin</div>
+      <div class="stat-value" id="statAdmins">0</div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <h2 class="panel-title">Danh Sách Người Dùng</h2>
+      <div class="list compact-list" id="userList"></div>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel-title">Theo Dõi Truyện</h2>
+      <div class="list compact-list" id="trackedList"></div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:20px;">
+    <h2 class="panel-title">Quản Lý Truyện</h2>
+    <form id="storyForm" class="story-form">
+      <div>
+        <label>Tên truyện</label>
+        <input type="text" id="storyTitle" required>
+      </div>
+      <div>
+        <label>Thể loại</label>
+        <input type="text" id="storyGenre" required>
+      </div>
+      <div>
+        <label>Chương</label>
+        <input type="text" id="storyChapter" placeholder="Chương 1" required>
+      </div>
+      <div>
+        <label>Cover theme</label>
+        <select id="storyCover">
+          <option value="cv-crimson">Crimson</option>
+          <option value="cv-navy">Navy</option>
+          <option value="cv-forest">Forest</option>
+          <option value="cv-amber">Amber</option>
+          <option value="cv-violet">Violet</option>
+        </select>
+      </div>
+      <div>
+        <label>Badge</label>
+        <select id="storyBadge">
+          <option value="">Không có</option>
+          <option value="new">Mới</option>
+          <option value="hot">Hot</option>
+          <option value="end">Full</option>
+        </select>
+      </div>
+      <div>
+        <label>Số sao</label>
+        <select id="storyStars">
+          <option value="★★★★★">★★★★★</option>
+          <option value="★★★★☆">★★★★☆</option>
+          <option value="★★★☆☆">★★★☆☆</option>
+        </select>
+      </div>
+      <div class="full">
+        <label>Mô tả ngắn</label>
+        <textarea id="storyDesc" placeholder="Mô tả ngắn cho truyện..."></textarea>
+      </div>
+      <div class="full">
+        <label>Đường dẫn chi tiết</label>
+        <input type="text" id="storyLink" placeholder="vi-du-truyen.html hoặc để trống">
+      </div>
+      <div class="story-form-actions">
+        <button type="submit" class="main-btn">Thêm Truyện</button>
+        <span id="storyMsg" style="color:var(--mist);font-size:18px;"></span>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" style="margin-top:20px;">
+    <h2 class="panel-title">Truyện Đã Thêm</h2>
+    <div class="story-list" id="storyList"></div>
+  </section>
+
+  <p class="note">
+    Tài khoản admin mặc định cho bản demo là <strong>admin@novellore.com</strong> với mật khẩu <strong>123456</strong>.
+    Đây chỉ là quyền admin phía frontend bằng localStorage, không phải bảo mật thật cho production.
+  </p>
+</main>
+
+<script>
+function getUsers() {
+  return JSON.parse(localStorage.getItem('users')) || [];
+}
+
+function saveUsers(nextUsers) {
+  localStorage.setItem('users', JSON.stringify(nextUsers));
+}
+
+function getCustomStories() {
+  return JSON.parse(localStorage.getItem('customStories')) || [];
+}
+
+function saveCustomStories(stories) {
+  localStorage.setItem('customStories', JSON.stringify(stories));
+}
+
+function logoutUser() {
+  localStorage.removeItem('currentUser');
+}
+
+const userList = document.getElementById('userList');
+const trackedList = document.getElementById('trackedList');
+const statUsers = document.getElementById('statUsers');
+const statAdmins = document.getElementById('statAdmins');
+const statAdmin = document.getElementById('statAdmin');
+const logoutBtn = document.getElementById('logoutBtn');
+const storyForm = document.getElementById('storyForm');
+const storyMsg = document.getElementById('storyMsg');
+const storyList = document.getElementById('storyList');
+
+function renderStats() {
+  const users = getUsers();
+  if (statUsers) {
+    statUsers.textContent = users.length;
+  }
+
+  if (statAdmins) {
+    statAdmins.textContent = users.filter(user => user.role === 'admin').length;
+  }
+}
+
+if (statAdmin && currentUser) {
+  statAdmin.textContent = currentUser.name || currentUser.email;
+}
+
+function renderUsers() {
+  const users = getUsers();
+  if (!userList) return;
+
+  userList.innerHTML = users.map(user => `
+    <div class="row" data-email="${user.email}">
+      <strong>${user.name}</strong>
+      <span>Email: ${user.email}</span>
+      <span class="role-badge">${user.role || 'user'}</span>
+      ${user.role === 'admin' ? '' : '<button type="button" class="admin-action-btn promote-btn">Nâng Thành Admin</button>'}
+    </div>
+  `).join('');
+}
+
+function renderTracked() {
+  const users = getUsers();
+  if (!trackedList) return;
+
+  const trackedRows = users.map(user => {
+    const tracked = JSON.parse(localStorage.getItem(`trackedBooks:${user.email}`)) || [];
+    return `
+      <div class="row">
+        <strong>${user.name}</strong>
+        <span>Email: ${user.email}</span>
+        <span>Đang theo dõi: ${tracked.length ? tracked.join(', ') : 'Chưa có truyện nào'}</span>
+      </div>
+    `;
+  }).join('');
+
+  trackedList.innerHTML = trackedRows || `
+    <div class="row">
+      <strong>Chưa có dữ liệu</strong>
+      <span>Hiện chưa có người dùng nào trong hệ thống.</span>
+    </div>
+  `;
+}
+
+function renderStories() {
+  const stories = getCustomStories();
+  if (!storyList) return;
+
+  if (!stories.length) {
+    storyList.innerHTML = `
+      <div class="row">
+        <strong>Chưa có truyện bổ sung</strong>
+        <span>Admin thêm truyện ở form phía trên, trang chủ sẽ đọc dữ liệu này ngay.</span>
+      </div>`;
+    return;
+  }
+
+  storyList.innerHTML = stories.map((story, index) => `
+    <div class="row" data-story-index="${index}">
+      <strong>${story.t}</strong>
+      <span>Thể loại: ${story.g}</span>
+      <span>Chương: ${story.c}</span>
+      <span>Link: ${story.link || '#'}</span>
+      <div class="story-tools">
+        <button type="button" class="danger-btn delete-story-btn">Xóa Truyện</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderStats();
+renderUsers();
+renderTracked();
+renderStories();
+
+if (userList) {
+  userList.addEventListener('click', function(e) {
+    const button = e.target.closest('.promote-btn');
+    if (!button) return;
+
+    const row = button.closest('[data-email]');
+    if (!row) return;
+
+    const email = row.dataset.email;
+    const users = getUsers().map(user => {
+      if (user.email === email) {
+        return { ...user, role: 'admin' };
+      }
+      return user;
+    });
+
+    saveUsers(users);
+    renderStats();
+    renderUsers();
+    renderTracked();
+  });
+}
+
+if (storyForm) {
+  storyForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('storyTitle').value.trim();
+    const genre = document.getElementById('storyGenre').value.trim();
+    const chapter = document.getElementById('storyChapter').value.trim();
+    const cover = document.getElementById('storyCover').value;
+    const badge = document.getElementById('storyBadge').value;
+    const stars = document.getElementById('storyStars').value;
+    const desc = document.getElementById('storyDesc').value.trim();
+    const link = document.getElementById('storyLink').value.trim();
+
+    const stories = getCustomStories();
+    const existed = stories.some(story => story.t.toLowerCase() === title.toLowerCase());
+    if (existed) {
+      storyMsg.textContent = 'Tên truyện đã tồn tại.';
+      return;
+    }
+
+    stories.push({
+      t: title,
+      g: genre,
+      c: chapter,
+      badge,
+      cv: cover,
+      stars,
+      desc,
+      link
+    });
+
+    saveCustomStories(stories);
+    storyForm.reset();
+    storyMsg.textContent = 'Đã thêm truyện mới.';
+    renderStories();
+  });
+}
+
+if (storyList) {
+  storyList.addEventListener('click', function(e) {
+    const button = e.target.closest('.delete-story-btn');
+    if (!button) return;
+
+    const row = button.closest('[data-story-index]');
+    if (!row) return;
+
+    const index = Number(row.dataset.storyIndex);
+    const stories = getCustomStories().filter((_, i) => i !== index);
+    saveCustomStories(stories);
+    renderStories();
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', function() {
+    logoutUser();
+    window.location.href = 'login.html';
+  });
+}
+</script>
+</body>
+</html>

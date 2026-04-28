@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thiên Đạo Đồ Thư Quán - NovelLore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --parchment:#f5efe4;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --mist:#d4c9b8;
+  --smoke:#17121e;
+  --border-gold:rgba(201,168,76,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:radial-gradient(circle at top,#0d1a3a 0%,#0d0b0e 58%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.28;
+}
+.topbar{
+  position:sticky;top:0;z-index:5;
+  background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);
+  border-bottom:1px solid var(--border-gold);
+}
+.topbar-inner{
+  max-width:1200px;margin:0 auto;padding:18px 32px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.brand{text-decoration:none;color:var(--gold-light);font-family:'Playfair Display',serif;font-size:28px;font-weight:900;}
+.brand span{color:var(--crimson);}
+.top-actions{display:flex;align-items:center;gap:12px;}
+.ghost-btn,.main-btn{
+  text-decoration:none;font-family:'Josefin Sans',sans-serif;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:11px 18px;
+}
+.ghost-btn{color:var(--mist);border:1px solid rgba(212,201,184,.2);}
+.main-btn{color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+.follow-btn{
+  appearance:none;font-family:'Josefin Sans',sans-serif;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;padding:11px 18px;
+  border:1px solid rgba(212,201,184,.2);background:none;color:var(--mist);cursor:pointer;
+}
+.follow-btn.active-follow{color:var(--gold-light);border-color:var(--gold);background:rgba(201,168,76,.1);}
+.admin-delete-btn{
+  appearance:none;font-family:'Josefin Sans',sans-serif;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;padding:11px 18px;
+  border:1px solid rgba(139,26,47,.45);background:rgba(139,26,47,.2);
+  color:#ffd8d8;cursor:pointer;display:none;
+}
+.admin-delete-btn:hover{background:rgba(139,26,47,.35);}
+.page{max-width:1200px;margin:0 auto;padding:40px 32px 72px;}
+.breadcrumb{
+  font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(212,201,184,.45);margin-bottom:28px;
+}
+.breadcrumb a{color:rgba(212,201,184,.45);text-decoration:none;}
+.breadcrumb a:hover{color:var(--gold);}
+.hero{
+  display:grid;grid-template-columns:320px 1fr;gap:32px;
+  background:rgba(23,18,30,.9);border:1px solid var(--border-gold);
+  padding:28px;position:relative;overflow:hidden;
+}
+
+.cover{
+  aspect-ratio:2/3;
+  background:linear-gradient(160deg,#0a0a1a 0%,#1a1a4a 60%,#080814 100%);
+  border:1px solid rgba(52,152,219,.25);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.cover svg{width:160px;height:220px;opacity:.9;}
+.badge{
+  position:absolute;top:12px;left:12px;
+  background:rgba(10,40,100,.92);color:#7ab8e8;
+  padding:4px 10px;font-family:'Josefin Sans',sans-serif;
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;
+}
+.rating{position:absolute;right:12px;bottom:12px;color:var(--gold);font-size:13px;}
+.meta{position:relative;z-index:1;}
+.eyebrow{
+  font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;color:#3498db;margin-bottom:14px;
+}
+.title{font-family:'Playfair Display',serif;font-size:44px;line-height:1.08;margin-bottom:14px;}
+.author{font-size:20px;color:rgba(212,201,184,.72);margin-bottom:20px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+.chip{
+  padding:7px 12px;border:1px solid rgba(52,152,219,.3);
+  font-family:'Josefin Sans',sans-serif;font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;color:#5dade2;
+}
+.desc{font-size:20px;line-height:1.8;color:rgba(212,201,184,.74);margin-bottom:26px;max-width:700px;}
+.action-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.stat{background:rgba(255,255,255,.02);border:1px solid rgba(52,152,219,.1);padding:16px;}
+.stat-label{
+  font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(212,201,184,.4);margin-bottom:8px;
+}
+.stat-value{font-family:'Playfair Display',serif;font-size:24px;color:var(--parchment);}
+.content-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:28px;margin-top:32px;}
+.panel{background:rgba(23,18,30,.88);border:1px solid var(--border-gold);padding:24px;}
+.panel-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold-light);margin-bottom:16px;}
+.panel-text{font-size:19px;line-height:1.8;color:rgba(212,201,184,.74);}
+.chapter-list{display:flex;flex-direction:column;gap:12px;}
+.chapter-item{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:14px 16px;background:rgba(255,255,255,.02);
+  border:1px solid rgba(201,168,76,.1);text-decoration:none;
+  transition:background .2s,border-color .2s;
+}
+.chapter-item:hover{background:rgba(52,152,219,.06);border-color:rgba(52,152,219,.25);}
+.chapter-name{font-size:20px;color:var(--parchment);}
+.chapter-time{
+  font-family:'Josefin Sans',sans-serif;font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.4);
+}
+.mini-list{display:flex;flex-direction:column;gap:12px;}
+.mini-card{padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);}
+.mini-card strong{display:block;color:var(--gold-light);font-size:18px;margin-bottom:6px;}
+.mini-card span{color:rgba(212,201,184,.68);font-size:17px;line-height:1.6;}
+
+/* Reading modal */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);z-index:50;overflow-y:auto;
+}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+.modal-box{
+  background:#12101a;border:1px solid var(--border-gold);
+  max-width:760px;width:100%;padding:40px 48px;position:relative;
+}
+.modal-close{
+  position:absolute;top:16px;right:20px;background:none;border:none;
+  color:rgba(212,201,184,.4);font-size:22px;cursor:pointer;transition:color .2s;
+}
+.modal-close:hover{color:var(--gold);}
+.modal-chapter-label{
+  font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:#3498db;margin-bottom:8px;
+}
+.modal-chapter-title{
+  font-family:'Playfair Display',serif;font-size:26px;color:var(--parchment);
+  margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(201,168,76,.15);
+}
+.modal-body{font-size:19px;line-height:2;color:rgba(240,232,220,.85);}
+.modal-body p{margin-bottom:1.5em;text-indent:2em;}
+.modal-body p:first-child::first-letter{
+  font-family:'Playfair Display',serif;font-size:58px;float:left;
+  line-height:.78;padding-right:10px;padding-top:4px;
+  color:#3498db;font-weight:900;
+}
+.modal-nav{
+  display:flex;justify-content:space-between;margin-top:36px;
+  padding-top:24px;border-top:1px solid rgba(201,168,76,.12);
+}
+.modal-nav-btn{
+  font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);background:none;
+  border:1px solid rgba(201,168,76,.3);padding:11px 22px;cursor:pointer;
+  transition:background .2s;text-decoration:none;
+}
+.modal-nav-btn:hover{background:rgba(201,168,76,.08);}
+.modal-nav-btn:disabled{opacity:.3;cursor:default;}
+
+@media(max-width:900px){
+  .hero,.content-grid{grid-template-columns:1fr;}
+  .cover{max-width:320px;}
+  .stats{grid-template-columns:1fr;}
+  .modal-box{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div class="top-actions">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="#danh-sach-chuong" class="main-btn">Đọc Ngay</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="breadcrumb">
+    <a href="index.html">Trang Chủ</a> / <a href="#">Huyền Huyễn</a> / Thiên Đạo Đồ Thư Quán
+  </div>
+
+  <section class="hero">
+    <div class="cover">
+      <span class="badge">HOT</span>
+      <div class="rating">★★★★★</div>
+      <svg viewBox="0 0 340 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer rings -->
+        <circle cx="170" cy="200" r="145" stroke="#3498db" stroke-width="0.5" opacity="0.12"/>
+        <circle cx="170" cy="200" r="110" stroke="#3498db" stroke-width="0.5" opacity="0.18"/>
+        <circle cx="170" cy="200" r="75" stroke="#5dade2" stroke-width="0.7" opacity="0.25"/>
+        <!-- Book shape -->
+        <rect x="120" y="130" width="100" height="130" rx="3" fill="none" stroke="#5dade2" stroke-width="1" opacity="0.5"/>
+        <line x1="170" y1="130" x2="170" y2="260" stroke="#5dade2" stroke-width="0.8" opacity="0.4"/>
+        <!-- Pages lines -->
+        <line x1="128" y1="155" x2="162" y2="155" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="128" y1="168" x2="162" y2="168" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="128" y1="181" x2="162" y2="181" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="128" y1="194" x2="162" y2="194" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="178" y1="155" x2="212" y2="155" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="178" y1="168" x2="212" y2="168" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <line x1="178" y1="181" x2="212" y2="181" stroke="#3498db" stroke-width="0.6" opacity="0.4"/>
+        <!-- Stars scattered -->
+        <circle cx="100" cy="120" r="2" fill="#5dade2" opacity="0.6"/>
+        <circle cx="240" cy="100" r="1.5" fill="#5dade2" opacity="0.5"/>
+        <circle cx="80" cy="280" r="1.5" fill="#3498db" opacity="0.5"/>
+        <circle cx="255" cy="300" r="2" fill="#5dade2" opacity="0.6"/>
+        <circle cx="135" cy="85" r="1" fill="#5dade2" opacity="0.4"/>
+        <circle cx="210" cy="330" r="1.5" fill="#3498db" opacity="0.4"/>
+        <!-- Glow center -->
+        <circle cx="170" cy="195" r="14" fill="#0a1a3a" stroke="#3498db" stroke-width="1.2" opacity="0.9"/>
+        <circle cx="170" cy="195" r="6" fill="#3498db" opacity="0.5"/>
+        <!-- Constellation lines -->
+        <path d="M100 120 L135 85 L170 195" stroke="#3498db" stroke-width="0.5" opacity="0.2"/>
+        <path d="M240 100 L210 330 L255 300" stroke="#5dade2" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+    </div>
+
+    <div class="meta">
+      <div class="eyebrow">Huyền Huyễn · Nổi Bật</div>
+      <h1 class="title">Thiên Đạo Đồ Thư Quán</h1>
+      <div class="author">Tác giả: Hoành Tảo Thiên Nhai</div>
+
+      <div class="chips">
+        <span class="chip">Huyền Huyễn</span>
+        <span class="chip">Đa Thế Giới</span>
+        <span class="chip">Không Gian</span>
+        <span class="chip">980 Chương</span>
+      </div>
+
+      <p class="desc">
+        Một thư viện kỳ lạ xuất hiện trong không gian hư vô, chứa đựng bí mật của muôn vàn thế giới song song.
+        Người thủ thư cô đơn ấy có quyền năng vô hạn nhưng lại bị ràng buộc bởi quy tắc tuyệt đối —
+        không can thiệp, chỉ quan sát. Cho đến khi một độc giả đặc biệt bước vào…
+      </p>
+
+      <div class="action-row">
+        <a href="#danh-sach-chuong" class="main-btn">Đọc Từ Đầu</a>
+        <button type="button" class="follow-btn" id="followBtn">Theo Dõi</button>
+        <button type="button" class="admin-delete-btn" id="adminDeleteBtn">Xóa Truyện</button>
+        <a href="index.html" class="ghost-btn">Quay Lại Danh Sách</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Lượt Đọc</div>
+          <div class="stat-value">6.7M</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Theo Dõi</div>
+          <div class="stat-value">103K</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Đánh Giá</div>
+          <div class="stat-value">9.0/10</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div class="panel">
+      <h2 class="panel-title">Giới Thiệu Nhanh</h2>
+      <p class="panel-text">
+        Thiên Đạo Đồ Thư Quán là bộ truyện huyền huyễn độc đáo với thế giới quan rộng lớn và hệ thống phép thuật
+        tinh vi. Điểm đặc sắc là góc nhìn quan sát toàn tri của nhân vật chính — chàng ta không trực tiếp tham
+        chiến mà điều phối từ xa qua kho tri thức vô hạn. Bộ truyện phù hợp độc giả thích cốt truyện chiều sâu,
+        ít hành động ồn ào mà thiên về bố cục và tầm nhìn chiến lược.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel-title">Thông Tin</h2>
+      <div class="mini-list">
+        <div class="mini-card">
+          <strong>Tình trạng</strong>
+          <span>Đang cập nhật</span>
+        </div>
+        <div class="mini-card">
+          <strong>Cập nhật gần nhất</strong>
+          <span>Chương 980, cách đây 3 giờ</span>
+        </div>
+        <div class="mini-card">
+          <strong>Đối tượng đọc</strong>
+          <span>Phù hợp người thích huyền huyễn thế giới quan rộng lớn, nhân vật chính thông minh chiều sâu.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="danh-sach-chuong" style="margin-top:28px;">
+    <h2 class="panel-title">Danh Sách Chương</h2>
+    <div class="chapter-list">
+      <a href="#" class="chapter-item" data-chapter="0">
+        <span class="chapter-name">Chương 1: Thư Viện Hư Vô</span>
+        <span class="chapter-time">Mở Đầu</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="1">
+        <span class="chapter-name">Chương 2: Vị Độc Giả Đầu Tiên</span>
+        <span class="chapter-time">Đọc Nhiều</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="2">
+        <span class="chapter-name">Chương 3: Quy Tắc Của Thiên Đạo</span>
+        <span class="chapter-time">Cao Trào</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="3">
+        <span class="chapter-name">Chương 4: Bí Mật Thế Giới Song Song</span>
+        <span class="chapter-time">Huyền Bí</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="4">
+        <span class="chapter-name">Chương 980: Thiên Đạo Giải Mã</span>
+        <span class="chapter-time">Mới Nhất</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- Reading Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-chapter-label" id="modalLabel"></div>
+    <div class="modal-chapter-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-nav">
+      <button class="modal-nav-btn" id="prevBtn">← Chương Trước</button>
+      <button class="modal-nav-btn" id="nextBtn">Chương Tiếp →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY_TITLE = 'Thiên Đạo Đồ Thư Quán';
+
+// ── Chapter data ──
+const chapters = [
+  {
+    title: "Chương 1: Thư Viện Hư Vô",
+    content: `<p>Trong khoảng không tuyệt đối — không ánh sáng, không âm thanh, không thời gian — một tòa kiến trúc kỳ lạ hiện ra từ hư vô.</p>
+    <p>Những kệ sách cao vút đến tận trần mà mắt thường không thể nhìn thấy đỉnh. Hàng triệu cuốn sách xếp ngay ngắn, mỗi cuốn phát ra ánh sáng nhẹ nhàng như những ngôi sao nhỏ trong đêm tối.</p>
+    <p>Giữa mê cung tri thức ấy, một bóng người ngồi sau chiếc bàn gỗ cổ xưa. Chàng ta — hay nàng ta, không ai biết chắc — lật từng trang sách với ánh mắt điềm tĩnh như nước sâu không đáy.</p>
+    <p>"Thế giới thứ bảy triệu lẻ một," giọng nói vang lên khẽ khàng, "bắt đầu hồi thứ ba trăm nghìn lần lặp."</p>
+    <p>Một cuốn sách mới tự động bay ra từ kệ cao nhất, đặt nhẹ nhàng lên bàn. Trang đầu tiên trắng tinh — câu chuyện chưa xảy ra, số phận chưa được viết.</p>
+    <p>Người thủ thư khẽ mỉm cười. Đây là công việc từ trước khi ký ức đầu tiên hình thành. Và sẽ tiếp tục mãi sau khi ký ức cuối cùng tan biến.</p>`
+  },
+  {
+    title: "Chương 2: Vị Độc Giả Đầu Tiên",
+    content: `<p>Trong mười triệu năm giữ thư viện, chưa bao giờ có ai đặt chân vào đây. Quy tắc thiên đạo ghi rõ: đây là không gian quan sát, không phải không gian tiếp xúc.</p>
+    <p>Thế nên khi tiếng bước chân vang lên từ hành lang phía đông, người thủ thư đứng dậy lần đầu tiên sau ngàn năm.</p>
+    <p>Kẻ đến là một thiếu niên — tóc bù xù, quần áo rách tả tơi, máu còn chưa khô trên trán. Đôi mắt mở to nhìn tòa thư viện với vẻ ngơ ngác hoàn toàn thật.</p>
+    <p>"Đây là… đâu vậy?" giọng chàng ta khàn khàn, như kẻ chưa nói chuyện với ai suốt nhiều ngày.</p>
+    <p>Người thủ thư quan sát một lúc rồi khẽ trả lời: "Nơi chứa đựng mọi câu chuyện đã xảy ra, đang xảy ra và sẽ xảy ra."</p>
+    <p>Thiếu niên nhìn lên kệ sách vô tận phía trên đầu. Trong ánh mắt kiệt sức ấy, có một tia sáng nhỏ bắt đầu bùng lên.</p>`
+  },
+  {
+    title: "Chương 3: Quy Tắc Của Thiên Đạo",
+    content: `<p>Quy tắc đầu tiên: Không can thiệp. Người thủ thư chỉ được quan sát, ghi chép và lưu trữ. Mọi hành động ảnh hưởng đến dòng chảy câu chuyện đều bị nghiêm cấm.</p>
+    <p>Quy tắc thứ hai: Không tiết lộ. Nội dung các cuốn sách là bí mật tuyệt đối. Kể cả một từ, một dòng hay một gợi ý nhỏ cũng đủ để thiên đạo trừng phạt.</p>
+    <p>Quy tắc thứ ba: Không rời đi. Thư viện là nhà tù mang hình dạng thư viện. Người thủ thư không thể bước ra ngoài, dù chỉ một bước.</p>
+    <p>"Vậy ta ở đây làm gì?" thiếu niên hỏi, tay đang lật một cuốn sách mỏng về lịch sử thế giới thứ mười hai.</p>
+    <p>Người thủ thư im lặng hồi lâu. Đây là câu hỏi chưa từng được đặt ra trong mười triệu năm. Bởi vì trước đây, chưa ai có mặt ở đây để hỏi.</p>
+    <p>"Đó là điều ta cũng muốn biết," người thủ thư thành thật trả lời.</p>`
+  },
+  {
+    title: "Chương 4: Bí Mật Thế Giới Song Song",
+    content: `<p>Sau ba tháng sống trong thư viện, thiếu niên — tên là Tần Dương — bắt đầu hiểu ra sự thật kinh hoàng.</p>
+    <p>Mỗi cuốn sách trên kệ là một thế giới thật sự đang tồn tại. Mỗi nhân vật trong sách là một sinh linh có ý thức, đang sống, đang đau khổ hoặc vui sướng ở đâu đó trong vũ trụ vô biên.</p>
+    <p>"Vậy khi ta đọc sách này…" Tần Dương đặt cuốn sách xuống, giọng run nhẹ, "…ta đang xem người ta thật sự chết?"</p>
+    <p>Người thủ thư không trả lời. Nhưng ánh mắt xác nhận tất cả.</p>
+    <p>Tần Dương đứng dậy, bước đến cửa sổ nhìn ra khoảng tối vô tận bên ngoài. Ngoài kia, ẩn trong bóng tối, là hàng triệu thế giới đang chuyển động.</p>
+    <p>Và chàng — một kẻ không nên có mặt ở đây — đang biết tất cả bí mật của chúng.</p>`
+  },
+  {
+    title: "Chương 980: Thiên Đạo Giải Mã",
+    content: `<p>Ngàn năm sau, Tần Dương đứng trước kệ sách cuối cùng — cuốn sách duy nhất không có tựa đề, không có tác giả, trang bìa trắng tinh.</p>
+    <p>Người thủ thư đứng cạnh, im lặng như thường lệ. Nhưng lần này, trong đôi mắt vốn điềm tĩnh đó, có gì đó khác lạ — một nỗi lo âu nhỏ, tinh tế như sợi tơ nhện.</p>
+    <p>"Đây là cuốn sách về thư viện này," Tần Dương nói, không phải hỏi. Ngàn năm đọc sách đã cho chàng trực giác không thể sai lầm.</p>
+    <p>Người thủ thư gật đầu lần đầu tiên.</p>
+    <p>"Và ta là nhân vật trong đó." Tần Dương mở trang đầu. Tên chàng xuất hiện ở dòng đầu tiên, cùng với một câu mà chàng đã đọc ngàn lần: <em>Thiên Đạo không có ngoại lệ. Nhưng ngoại lệ đang cầm cuốn sách này.</em></p>
+    <p>Cánh cửa thư viện — cánh cửa chưa từng mở trong mười triệu năm — bắt đầu rung chuyển.</p>`
+  }
+];
+
+let currentChapter = 0;
+
+function openChapter(idx) {
+  currentChapter = idx;
+  const ch = chapters[idx];
+  document.getElementById('modalLabel').textContent = `Thiên Đạo Đồ Thư Quán · Chương ${idx + 1} / ${chapters.length} (mẫu)`;
+  document.getElementById('modalTitle').textContent = ch.title;
+  document.getElementById('modalBody').innerHTML = ch.content;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === chapters.length - 1;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.querySelector('.modal-box').scrollTop = 0;
+  window.scrollTo({top: 0});
+}
+
+document.querySelectorAll('.chapter-item').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    openChapter(parseInt(el.dataset.chapter));
+  });
+});
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('open');
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (currentChapter > 0) openChapter(currentChapter - 1);
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (currentChapter < chapters.length - 1) openChapter(currentChapter + 1);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modalOverlay').classList.remove('open');
+});
+
+// ── Follow / Admin ──
+const STORY_KEY = STORY_TITLE;
+function getCurrentUser() { return JSON.parse(localStorage.getItem('currentUser')); }
+function getTracked(user) {
+  const key = user?.email ? `trackedBooks:${user.email}` : null;
+  return key ? JSON.parse(localStorage.getItem(key)) || [] : [];
+}
+function saveTracked(user, list) {
+  const key = user?.email ? `trackedBooks:${user.email}` : null;
+  if (key) localStorage.setItem(key, JSON.stringify(list));
+}
+
+const followBtn = document.getElementById('followBtn');
+const adminDeleteBtn = document.getElementById('adminDeleteBtn');
+const currentUser = getCurrentUser();
+
+function refreshFollow() {
+  if (!currentUser) { followBtn.textContent = 'Đăng Nhập Để Theo Dõi'; return; }
+  const tracked = getTracked(currentUser);
+  const has = tracked.includes(STORY_KEY);
+  followBtn.textContent = has ? 'Bỏ Theo Dõi' : 'Theo Dõi';
+  followBtn.classList.toggle('active-follow', has);
+}
+
+followBtn.addEventListener('click', () => {
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+  const tracked = getTracked(currentUser);
+  const has = tracked.includes(STORY_KEY);
+  saveTracked(currentUser, has ? tracked.filter(t => t !== STORY_KEY) : [...tracked, STORY_KEY]);
+  refreshFollow();
+});
+
+if (currentUser?.role === 'admin') adminDeleteBtn.style.display = 'inline-block';
+adminDeleteBtn.addEventListener('click', () => {
+  if (currentUser?.role !== 'admin') return;
+  if (!confirm('Xóa truyện này?')) return;
+  const hidden = JSON.parse(localStorage.getItem('hiddenStories') || '[]');
+  if (!hidden.includes(STORY_KEY)) localStorage.setItem('hiddenStories', JSON.stringify([...hidden, STORY_KEY]));
+  window.location.href = 'index.html';
+});
+
+refreshFollow();
+</script>
+</body>
+</html>

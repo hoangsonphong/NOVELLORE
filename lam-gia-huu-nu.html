@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lâm Gia Hữu Nữ - NovelLore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@400;500;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0d0b0e;
+  --parchment:#f5efe4;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --crimson:#8b1a2f;
+  --mist:#d4c9b8;
+  --border-gold:rgba(201,168,76,0.2);
+}
+html{scroll-behavior:smooth;}
+body{
+  background:radial-gradient(circle at top,#1f2b1c 0%,#0d0b0e 58%);
+  color:var(--parchment);
+  font-family:'Cormorant Garamond',serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  opacity:.28;
+}
+.topbar{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#120f17 0%,#0d0b0e 100%);border-bottom:1px solid var(--border-gold);}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.brand{text-decoration:none;color:var(--gold-light);font-family:'Playfair Display',serif;font-size:28px;font-weight:900;}
+.brand span{color:var(--crimson);}
+.top-actions{display:flex;align-items:center;gap:12px;}
+.ghost-btn,.main-btn{text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:11px 18px;}
+.ghost-btn{color:var(--mist);border:1px solid rgba(212,201,184,.2);}
+.main-btn{color:var(--ink);background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+.follow-btn,.admin-delete-btn{
+  appearance:none;font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  padding:11px 18px;background:none;cursor:pointer;
+}
+.follow-btn{border:1px solid rgba(212,201,184,.2);color:var(--mist);}
+.follow-btn.active-follow{color:var(--gold-light);border-color:var(--gold);background:rgba(201,168,76,.1);}
+.admin-delete-btn{border:1px solid rgba(139,26,47,.45);background:rgba(139,26,47,.2);color:#ffd8d8;display:none;}
+.admin-delete-btn:hover{background:rgba(139,26,47,.35);}
+.page{max-width:1200px;margin:0 auto;padding:40px 32px 72px;}
+.breadcrumb{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.45);margin-bottom:28px;}
+.hero{
+  display:grid;grid-template-columns:320px 1fr;gap:32px;background:rgba(23,18,30,.9);
+  border:1px solid var(--border-gold);padding:28px;position:relative;overflow:hidden;
+}
+.cover{
+  aspect-ratio:2/3;background:linear-gradient(160deg,#112010 0%,#2d4a24 60%,#0d1409 100%);
+  border:1px solid rgba(201,168,76,.18);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+}
+.cover svg{width:160px;height:220px;opacity:.9;}
+.badge{position:absolute;top:12px;left:12px;background:rgba(20,18,28,.92);color:var(--mist);padding:4px 10px;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.rating{position:absolute;right:12px;bottom:12px;color:var(--gold);font-size:13px;}
+.eyebrow{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#7bc96f;margin-bottom:14px;}
+.title{font-family:'Playfair Display',serif;font-size:46px;line-height:1.08;margin-bottom:14px;}
+.author{font-size:20px;color:rgba(212,201,184,.72);margin-bottom:20px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+.chip{padding:7px 12px;border:1px solid rgba(123,201,111,.24);font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9fe08c;}
+.desc{font-size:20px;line-height:1.8;color:rgba(212,201,184,.74);margin-bottom:26px;max-width:700px;}
+.action-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px;}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.stat{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.08);padding:16px;}
+.stat-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.4);margin-bottom:8px;}
+.stat-value{font-family:'Playfair Display',serif;font-size:24px;color:var(--parchment);}
+.content-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:28px;margin-top:32px;}
+.panel{background:rgba(23,18,30,.88);border:1px solid var(--border-gold);padding:24px;}
+.panel-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--gold-light);margin-bottom:16px;}
+.panel-text{font-size:19px;line-height:1.8;color:rgba(212,201,184,.74);}
+.chapter-list,.mini-list{display:flex;flex-direction:column;gap:12px;}
+.chapter-item{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;
+  background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);text-decoration:none;transition:background .2s,border-color .2s;
+}
+.chapter-item:hover{background:rgba(123,201,111,.06);border-color:rgba(123,201,111,.24);}
+.chapter-name{font-size:20px;color:var(--parchment);}
+.chapter-time{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,201,184,.4);}
+.mini-card{padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.1);}
+.mini-card strong{display:block;color:var(--gold-light);font-size:18px;margin-bottom:6px;}
+.mini-card span{color:rgba(212,201,184,.68);font-size:17px;line-height:1.6;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:50;overflow-y:auto;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+.modal-box{background:#12101a;border:1px solid var(--border-gold);max-width:760px;width:100%;padding:40px 48px;position:relative;}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(212,201,184,.4);font-size:22px;cursor:pointer;transition:color .2s;}
+.modal-close:hover{color:var(--gold);}
+.modal-chapter-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#7bc96f;margin-bottom:8px;}
+.modal-chapter-title{font-family:'Playfair Display',serif;font-size:26px;color:var(--parchment);margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(201,168,76,.15);}
+.modal-body{font-size:19px;line-height:2;color:rgba(240,232,220,.85);}
+.modal-body p{margin-bottom:1.5em;text-indent:2em;}
+.modal-body p:first-child::first-letter{font-family:'Playfair Display',serif;font-size:58px;float:left;line-height:.78;padding-right:10px;padding-top:4px;color:#7bc96f;font-weight:900;}
+.modal-nav{display:flex;justify-content:space-between;margin-top:36px;padding-top:24px;border-top:1px solid rgba(201,168,76,.12);}
+.modal-nav-btn{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:none;border:1px solid rgba(201,168,76,.3);padding:11px 22px;cursor:pointer;transition:background .2s;text-decoration:none;}
+.modal-nav-btn:hover{background:rgba(201,168,76,.08);}
+.modal-nav-btn:disabled{opacity:.3;cursor:default;}
+@media(max-width:900px){
+  .hero,.content-grid{grid-template-columns:1fr;}
+  .cover{max-width:320px;}
+  .stats{grid-template-columns:1fr;}
+  .modal-box{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">Novel<span>Lore</span></a>
+    <div class="top-actions">
+      <a href="index.html" class="ghost-btn">Trang Chủ</a>
+      <a href="#danh-sach-chuong" class="main-btn">Đọc Ngay</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="breadcrumb">Trang Chủ / Ngôn Tình / Lâm Gia Hữu Nữ</div>
+
+  <section class="hero">
+    <div class="cover">
+      <span class="badge">Full</span>
+      <div class="rating">★★★★★</div>
+      <svg viewBox="0 0 340 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M110 300 Q170 180 230 300" fill="none" stroke="#9fe08c" stroke-width="1" opacity="0.35"/>
+        <path d="M140 120 Q170 90 200 120 Q190 175 170 190 Q150 175 140 120Z" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+        <circle cx="170" cy="210" r="26" fill="none" stroke="#7bc96f" stroke-width="1" opacity="0.4"/>
+        <circle cx="170" cy="210" r="10" fill="#1d3016" stroke="#c9a84c" stroke-width="1" opacity="0.9"/>
+        <path d="M118 255 Q145 238 170 255 Q195 238 222 255" fill="none" stroke="#8b1a2f" stroke-width="1.1" opacity="0.6"/>
+        <circle cx="122" cy="148" r="2" fill="#9fe08c" opacity="0.6"/>
+        <circle cx="212" cy="160" r="2" fill="#9fe08c" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <div class="meta">
+      <div class="eyebrow">Ngôn Tình · Hoàn Thành</div>
+      <h1 class="title">Lâm Gia Hữu Nữ</h1>
+      <div class="author">Tác giả: Mộc Thanh Vân</div>
+
+      <div class="chips">
+        <span class="chip">Ngôn Tình</span>
+        <span class="chip">Gia Tộc</span>
+        <span class="chip">Trọng Sinh</span>
+        <span class="chip">880 Chương</span>
+      </div>
+
+      <p class="desc">
+        Lâm gia có một tiểu thư nổi danh dịu dàng nhưng lại mang trong mình bí mật không ai biết. Câu chuyện nhẹ nhàng,
+        ngắn gọn và đủ cao trào để theo dõi như một bộ ngôn tình đọc thư giãn.
+      </p>
+
+      <div class="action-row">
+        <a href="#danh-sach-chuong" class="main-btn">Đọc Từ Đầu</a>
+        <button type="button" class="follow-btn" id="followBtn">Theo Dõi</button>
+        <button type="button" class="admin-delete-btn" id="adminDeleteBtn">Xóa Truyện</button>
+        <a href="index.html" class="ghost-btn">Quay Lại Danh Sách</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Lượt Đọc</div>
+          <div class="stat-value">980K</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Theo Dõi</div>
+          <div class="stat-value">72K</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Đánh Giá</div>
+          <div class="stat-value">8.8/10</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <div class="panel">
+      <h2 class="panel-title">Giới Thiệu Nhanh</h2>
+      <p class="panel-text">
+        Đây là bộ ngôn tình có nhịp kể êm, thiên về mối quan hệ gia đình và cảm xúc cá nhân. Nội dung mẫu được giữ ngắn để bạn
+        dễ dùng làm khung cho các truyện khác cùng thể loại.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel-title">Thông Tin</h2>
+      <div class="mini-list">
+        <div class="mini-card">
+          <strong>Tình trạng</strong>
+          <span>Hoàn thành</span>
+        </div>
+        <div class="mini-card">
+          <strong>Cập nhật gần nhất</strong>
+          <span>Chương 880, đã hoàn tất</span>
+        </div>
+        <div class="mini-card">
+          <strong>Đối tượng đọc</strong>
+          <span>Phù hợp người thích ngôn tình cổ phong, ít hành động và nhiều đoạn đối thoại cảm xúc.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="danh-sach-chuong" style="margin-top:28px;">
+    <h2 class="panel-title">Danh Sách Chương</h2>
+    <div class="chapter-list">
+      <a href="#" class="chapter-item" data-chapter="0">
+        <span class="chapter-name">Chương 1: Ngày Trở Về</span>
+        <span class="chapter-time">Mở Đầu</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="1">
+        <span class="chapter-name">Chương 2: Hữu Nữ Của Lâm Gia</span>
+        <span class="chapter-time">Tiếp Theo</span>
+      </a>
+      <a href="#" class="chapter-item" data-chapter="2">
+        <span class="chapter-name">Chương 3: Một Lá Thư Cũ</span>
+        <span class="chapter-time">Cao Trào</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-chapter-label" id="modalLabel"></div>
+    <div class="modal-chapter-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-nav">
+      <button class="modal-nav-btn" id="prevBtn">← Chương Trước</button>
+      <button class="modal-nav-btn" id="nextBtn">Chương Tiếp →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY_TITLE = 'Lâm Gia Hữu Nữ';
+
+const chapters = [
+  {
+    title: 'Chương 1: Ngày Trở Về',
+    content: `<p>Lâm Uyển mở mắt trong căn phòng cũ của chính mình. Mọi thứ vẫn như trước, chỉ có trái tim nàng là không còn giống ngày xưa nữa.</p>
+    <p>Bên ngoài cửa sổ, gió đầu xuân lướt qua hàng trúc. Trong khoảnh khắc ngắn ngủi ấy, nàng hiểu mình đã có thêm một cơ hội để sửa lại những điều từng bỏ lỡ.</p>`
+  },
+  {
+    title: 'Chương 2: Hữu Nữ Của Lâm Gia',
+    content: `<p>Danh tiếng của Lâm gia luôn gắn với lễ nghi và khuôn phép. Là tiểu thư duy nhất trong phủ, Lâm Uyển từ nhỏ đã được dạy phải mỉm cười đúng lúc, nói đúng lời và giấu đi mọi suy nghĩ thật.</p>
+    <p>Nhưng lần này, nàng không định sống một đời chỉ để làm vừa lòng người khác nữa.</p>`
+  },
+  {
+    title: 'Chương 3: Một Lá Thư Cũ',
+    content: `<p>Chiếc hộp gỗ khóa kín nhiều năm được mở ra trong đêm. Bên trong chỉ có một lá thư ngắn, nét mực đã nhạt nhưng từng chữ vẫn đủ khiến lòng người chấn động.</p>
+    <p>Lâm Uyển khép mắt lại. Có lẽ từ đây, câu chuyện của nàng mới thực sự bắt đầu.</p>`
+  }
+];
+
+let currentChapter = 0;
+
+function openChapter(idx) {
+  currentChapter = idx;
+  const ch = chapters[idx];
+  document.getElementById('modalLabel').textContent = `Lâm Gia Hữu Nữ · Chương ${idx + 1} / ${chapters.length} (mẫu)`;
+  document.getElementById('modalTitle').textContent = ch.title;
+  document.getElementById('modalBody').innerHTML = ch.content;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === chapters.length - 1;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.querySelector('.modal-box').scrollTop = 0;
+  window.scrollTo({ top: 0 });
+}
+
+document.querySelectorAll('.chapter-item').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    openChapter(parseInt(el.dataset.chapter));
+  });
+});
+
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  if (currentChapter > 0) openChapter(currentChapter - 1);
+});
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  if (currentChapter < chapters.length - 1) openChapter(currentChapter + 1);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+});
+
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem('currentUser'));
+}
+
+function getTrackedStorageKey(user) {
+  return user && user.email ? `trackedBooks:${user.email}` : null;
+}
+
+function getTrackedBooks(user) {
+  const key = getTrackedStorageKey(user);
+  if (!key) return [];
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+function saveTrackedBooks(user, titles) {
+  const key = getTrackedStorageKey(user);
+  if (!key) return;
+  localStorage.setItem(key, JSON.stringify(titles));
+}
+
+function getHiddenStories() {
+  return JSON.parse(localStorage.getItem('hiddenStories')) || [];
+}
+
+function saveHiddenStories(titles) {
+  localStorage.setItem('hiddenStories', JSON.stringify(titles));
+}
+
+const followBtn = document.getElementById('followBtn');
+const adminDeleteBtn = document.getElementById('adminDeleteBtn');
+const currentUser = getCurrentUser();
+
+function refreshFollowButton() {
+  if (!followBtn) return;
+
+  if (!currentUser) {
+    followBtn.textContent = 'Đăng Nhập Để Theo Dõi';
+    followBtn.classList.remove('active-follow');
+    return;
+  }
+
+  const tracked = getTrackedBooks(currentUser);
+  const isTracked = tracked.includes(STORY_TITLE);
+  followBtn.textContent = isTracked ? 'Bỏ Theo Dõi' : 'Theo Dõi';
+  followBtn.classList.toggle('active-follow', isTracked);
+}
+
+if (followBtn) {
+  followBtn.addEventListener('click', function() {
+    if (!currentUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const tracked = getTrackedBooks(currentUser);
+    const isTracked = tracked.includes(STORY_TITLE);
+    const nextTracked = isTracked
+      ? tracked.filter(title => title !== STORY_TITLE)
+      : [...tracked, STORY_TITLE];
+
+    saveTrackedBooks(currentUser, nextTracked);
+    refreshFollowButton();
+  });
+}
+
+if (adminDeleteBtn && currentUser && currentUser.role === 'admin') {
+  adminDeleteBtn.style.display = 'inline-block';
+}
+
+if (adminDeleteBtn) {
+  adminDeleteBtn.addEventListener('click', function() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    const confirmed = window.confirm('Xóa truyện này khỏi trang chủ và danh sách theo dõi?');
+    if (!confirmed) return;
+
+    const hiddenStories = getHiddenStories();
+    if (!hiddenStories.includes(STORY_TITLE)) {
+      saveHiddenStories([...hiddenStories, STORY_TITLE]);
+    }
+
+    window.location.href = 'index.html';
+  });
+}
+
+refreshFollowButton();
+</script>
+</body>
+</html>
