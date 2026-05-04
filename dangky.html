@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovelLore - Đăng Nhập</title>
+<title>NovelLore - Đăng Ký</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@400;600&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -14,131 +14,323 @@
 body{
   background:radial-gradient(circle at top,#24152e 0%,#0d0b0e 60%);
   min-height:100vh;display:flex;justify-content:center;align-items:center;
-  font-family:'Cormorant Garamond',serif;color:var(--parchment);overflow:hidden;
+  font-family:'Cormorant Garamond',serif;color:var(--parchment);
+  padding: 20px 0;
 }
 body::before{
   content:"";position:fixed;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   pointer-events:none;
 }
-.login-container{
-  width:400px;background:rgba(20,15,25,0.9);
+.register-container{
+  width:420px;background:rgba(20,15,25,0.92);
   border:1px solid rgba(201,168,76,0.3);padding:40px;
-  box-shadow:0 0 30px rgba(0,0,0,0.6);position:relative;z-index:2;
+  box-shadow:0 0 40px rgba(0,0,0,0.7);position:relative;z-index:2;
+  animation: fadeIn 0.6s ease;
 }
-.login-container::before{
+@keyframes fadeIn {
+  from { opacity:0; transform: translateY(16px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.register-container::before{
   content:"";position:absolute;top:0;left:0;width:100%;height:2px;
   background:linear-gradient(90deg,transparent,var(--gold),var(--crimson),var(--gold),transparent);
 }
-.logo{text-align:center;font-family:'Playfair Display',serif;font-size:32px;color:var(--gold-light);margin-bottom:10px;}
-.logo span{color:var(--crimson);}
-.subtitle{text-align:center;font-size:14px;letter-spacing:3px;margin-bottom:30px;color:var(--mist);font-family:'Josefin Sans',sans-serif;}
-.home-link{text-align:center;margin-bottom:25px;}
-.home-link a{color:var(--mist);text-decoration:none;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;transition:0.3s;}
-.home-link a:hover{color:var(--gold-light);}
-.input-group{margin-bottom:20px;}
-.input-group label{display:block;margin-bottom:8px;color:var(--gold);}
-.input-group input{width:100%;padding:12px;background:#16111b;border:1px solid rgba(201,168,76,0.2);color:white;outline:none;font-size:15px;}
-.input-group input:focus{border-color:var(--gold);}
-.login-btn{
-  width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  border:none;color:black;font-weight:bold;cursor:pointer;margin-top:10px;
-  font-family:'Josefin Sans',sans-serif;font-size:13px;letter-spacing:2px;
-  transition:opacity .2s;
+.register-container::after{
+  content:"";position:absolute;bottom:0;left:0;width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.2),transparent);
 }
-.login-btn:hover{opacity:0.9;}
-.login-btn:disabled{opacity:0.5;cursor:not-allowed;}
-.register-link{text-align:center;margin-top:20px;font-size:14px;}
-.register-link a{color:var(--crimson);text-decoration:none;}
-#loginMsg{
-  margin-top:15px;text-align:center;color:var(--gold-light);
-  font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:1px;min-height:18px;
+.logo{text-align:center;font-family:'Playfair Display',serif;font-size:32px;color:var(--gold-light);margin-bottom:6px;}
+.logo span{color:var(--crimson);}
+.subtitle{text-align:center;font-size:12px;letter-spacing:3px;margin-bottom:8px;color:var(--mist);font-family:'Josefin Sans',sans-serif;}
+.section-title{
+  text-align:center;font-size:11px;letter-spacing:4px;margin-bottom:28px;
+  color:rgba(201,168,76,0.6);font-family:'Josefin Sans',sans-serif;text-transform:uppercase;
+}
+.home-link{text-align:center;margin-bottom:24px;}
+.home-link a{
+  color:var(--mist);text-decoration:none;font-family:'Josefin Sans',sans-serif;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:0.3s;
+}
+.home-link a:hover{color:var(--gold-light);}
+
+.input-group{margin-bottom:18px;position:relative;}
+.input-group label{
+  display:block;margin-bottom:7px;color:var(--gold);
+  font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+}
+.input-group input{
+  width:100%;padding:11px 14px;background:#16111b;
+  border:1px solid rgba(201,168,76,0.2);color:white;outline:none;
+  font-size:15px;font-family:'Cormorant Garamond',serif;
+  transition:border-color 0.3s, box-shadow 0.3s;
+}
+.input-group input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 2px rgba(201,168,76,0.08);
+}
+.input-group input.error{border-color:#ff6b6b;}
+.input-group input.success{border-color:#6bcb77;}
+.hint{
+  font-size:11px;color:rgba(212,201,184,0.5);font-family:'Josefin Sans',sans-serif;
+  margin-top:5px;letter-spacing:0.5px;
+}
+.hint.err{color:#ff8a8a;}
+
+.strength-bar{
+  display:flex;gap:4px;margin-top:7px;
+}
+.strength-bar .seg{
+  flex:1;height:3px;background:rgba(255,255,255,0.1);transition:background 0.3s;
+  border-radius:2px;
+}
+.strength-bar .seg.weak{background:#ff6b6b;}
+.strength-bar .seg.medium{background:#ffd166;}
+.strength-bar .seg.strong{background:#6bcb77;}
+
+.register-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  border:none;color:#0d0b0e;font-weight:700;cursor:pointer;margin-top:8px;
+  font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  transition:opacity .2s, transform .1s;
+  position:relative;overflow:hidden;
+}
+.register-btn::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  transition:background 0.2s;
+}
+.register-btn:hover{opacity:0.92;}
+.register-btn:active{transform:scale(0.99);}
+.register-btn:disabled{opacity:0.45;cursor:not-allowed;}
+
+.login-link{text-align:center;margin-top:22px;font-size:14px;color:var(--mist);}
+.login-link a{color:var(--crimson);text-decoration:none;transition:0.3s;}
+.login-link a:hover{color:var(--gold-light);}
+
+#registerMsg{
+  margin-top:14px;text-align:center;color:var(--gold-light);
+  font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:1px;
+  min-height:18px;line-height:1.6;
+}
+
+.divider{
+  border:none;border-top:1px solid rgba(201,168,76,0.12);margin:6px 0 20px;
 }
 </style>
 </head>
 <body>
 
-<div class="login-container">
+<div class="register-container">
   <div class="logo">Novel<span>Lore</span></div>
-  <div class="subtitle">CỔNG TRUY CẬP THƯ VIỆN</div>
+  <div class="subtitle">THƯ VIỆN TRUYỆN</div>
+  <div class="section-title">✦ Tạo tài khoản mới ✦</div>
 
   <div class="home-link">
     <a href="index.html">← Quay về trang chủ</a>
   </div>
 
-  <form id="loginForm">
-    <div class="input-group">
-      <label>Email</label>
-      <input type="email" id="loginEmail" required autocomplete="email"/>
-    </div>
-    <div class="input-group">
-      <label>Mật khẩu</label>
-      <input type="password" id="loginPassword" required autocomplete="current-password"/>
-    </div>
-    <button type="submit" class="login-btn" id="loginBtn">Đăng Nhập</button>
-  </form>
+  <hr class="divider">
 
-  <p id="loginMsg"></p>
+  <div class="input-group">
+    <label>Tên hiển thị</label>
+    <input type="text" id="displayName" placeholder="Tên bạn muốn hiển thị" autocomplete="name"/>
+  </div>
 
-  <div class="register-link">
-    Chưa có tài khoản? <a href="dangky.html">Đăng ký ngay</a>
+  <div class="input-group">
+    <label>Tên đăng nhập (username)</label>
+    <input type="text" id="username" placeholder="Chỉ dùng chữ, số, dấu gạch dưới" autocomplete="username"/>
+    <div class="hint" id="usernameHint">Tối thiểu 3 ký tự, không dấu, không khoảng trắng</div>
+  </div>
+
+  <div class="input-group">
+    <label>Email</label>
+    <input type="email" id="regEmail" placeholder="email@example.com" autocomplete="email"/>
+  </div>
+
+  <div class="input-group">
+    <label>Mật khẩu</label>
+    <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password"/>
+    <div class="strength-bar" id="strengthBar">
+      <div class="seg" id="s1"></div>
+      <div class="seg" id="s2"></div>
+      <div class="seg" id="s3"></div>
+    </div>
+    <div class="hint" id="pwHint">Độ mạnh mật khẩu</div>
+  </div>
+
+  <div class="input-group">
+    <label>Xác nhận mật khẩu</label>
+    <input type="password" id="regPasswordConfirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password"/>
+    <div class="hint" id="confirmHint"></div>
+  </div>
+
+  <button class="register-btn" id="registerBtn" onclick="handleRegister()">Tạo Tài Khoản</button>
+
+  <p id="registerMsg"></p>
+
+  <div class="login-link">
+    Đã có tài khoản? <a href="login.html">Đăng nhập</a>
   </div>
 </div>
 
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://snimdewrrausajqjpcqi.supabase.co';
+const SUPABASE_URL  = 'https://snimdewrrausajqjpcqi.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuaW1kZXdycmF1c2FqcWpwY3FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODUwNjQsImV4cCI6MjA5MzQ2MTA2NH0.C4KJvcP_7Nblxw7Tfce5osEW36L5iazMunY2fQBfcT4';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-const loginForm = document.getElementById('loginForm');
-const loginMsg  = document.getElementById('loginMsg');
-const loginBtn  = document.getElementById('loginBtn');
-
-// Nếu đã đăng nhập rồi thì chuyển thẳng về trang chủ
+// Nếu đã đăng nhập thì về trang chủ
 sb.auth.getSession().then(({ data }) => {
   if (data.session) window.location.href = 'index.html';
 });
 
-loginForm.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const email    = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
+// ---- Kiểm tra độ mạnh mật khẩu ----
+document.getElementById('regPassword').addEventListener('input', function() {
+  const val = this.value;
+  const s1 = document.getElementById('s1');
+  const s2 = document.getElementById('s2');
+  const s3 = document.getElementById('s3');
+  const hint = document.getElementById('pwHint');
 
-  loginBtn.disabled = true;
-  loginMsg.style.color = '#e8c97a';
-  loginMsg.textContent = 'Đang đăng nhập…';
+  s1.className = 'seg'; s2.className = 'seg'; s3.className = 'seg';
 
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    loginMsg.style.color = '#ff8a8a';
-    loginMsg.textContent = error.message.includes('Invalid')
-      ? 'Sai email hoặc mật khẩu.'
-      : error.message;
-    loginBtn.disabled = false;
+  if (val.length === 0) {
+    hint.textContent = 'Độ mạnh mật khẩu';
+    hint.style.color = 'rgba(212,201,184,0.5)';
     return;
   }
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) || /[0-9]/.test(val) || /[^a-zA-Z0-9]/.test(val)) score++;
 
-  // Lấy profile để biết role
-  const { data: profile } = await sb
-    .from('profiles')
-    .select('username, display_name, role')
-    .eq('id', data.user.id)
-    .single();
+  if (score === 1) {
+    s1.classList.add('weak');
+    hint.textContent = 'Yếu'; hint.style.color = '#ff8a8a';
+  } else if (score === 2) {
+    s1.classList.add('medium'); s2.classList.add('medium');
+    hint.textContent = 'Trung bình'; hint.style.color = '#ffd166';
+  } else {
+    s1.classList.add('strong'); s2.classList.add('strong'); s3.classList.add('strong');
+    hint.textContent = 'Mạnh'; hint.style.color = '#6bcb77';
+  }
 
-  // Lưu thông tin gọn vào localStorage để index.html đọc nhanh
-  localStorage.setItem('currentUser', JSON.stringify({
-    id:    data.user.id,
-    email: data.user.email,
-    name:  profile?.display_name || profile?.username || email,
-    role:  profile?.role || 'user'
-  }));
-
-  loginMsg.textContent = 'Đăng nhập thành công. Đang chuyển trang…';
-  setTimeout(() => window.location.href = 'index.html', 900);
+  // Kiểm tra confirm nếu đã nhập
+  const confirm = document.getElementById('regPasswordConfirm').value;
+  if (confirm) checkConfirm();
 });
+
+// ---- Kiểm tra xác nhận mật khẩu ----
+document.getElementById('regPasswordConfirm').addEventListener('input', checkConfirm);
+
+function checkConfirm() {
+  const pw = document.getElementById('regPassword').value;
+  const cf = document.getElementById('regPasswordConfirm').value;
+  const hint = document.getElementById('confirmHint');
+  const input = document.getElementById('regPasswordConfirm');
+  if (!cf) { hint.textContent = ''; input.className = ''; return; }
+  if (pw === cf) {
+    hint.textContent = '✓ Mật khẩu khớp';
+    hint.style.color = '#6bcb77';
+    input.classList.remove('error'); input.classList.add('success');
+  } else {
+    hint.textContent = '✗ Mật khẩu không khớp';
+    hint.style.color = '#ff8a8a';
+    input.classList.remove('success'); input.classList.add('error');
+  }
+}
+
+// ---- Kiểm tra username ----
+document.getElementById('username').addEventListener('input', function() {
+  const val = this.value;
+  const hint = document.getElementById('usernameHint');
+  const valid = /^[a-zA-Z0-9_]{3,}$/.test(val);
+  if (!val) {
+    hint.textContent = 'Tối thiểu 3 ký tự, không dấu, không khoảng trắng';
+    hint.className = 'hint';
+    this.classList.remove('error','success');
+  } else if (valid) {
+    hint.textContent = '✓ Username hợp lệ';
+    hint.className = 'hint'; hint.style.color = '#6bcb77';
+    this.classList.remove('error'); this.classList.add('success');
+  } else {
+    hint.textContent = '✗ Chỉ dùng chữ cái, số và dấu _ (tối thiểu 3 ký tự)';
+    hint.className = 'hint err';
+    this.classList.remove('success'); this.classList.add('error');
+  }
+});
+
+// ---- Xử lý đăng ký ----
+async function handleRegister() {
+  const displayName = document.getElementById('displayName').value.trim();
+  const username    = document.getElementById('username').value.trim();
+  const email       = document.getElementById('regEmail').value.trim();
+  const password    = document.getElementById('regPassword').value;
+  const confirm     = document.getElementById('regPasswordConfirm').value;
+  const msg         = document.getElementById('registerMsg');
+  const btn         = document.getElementById('registerBtn');
+
+  const showErr = (text) => {
+    msg.style.color = '#ff8a8a';
+    msg.textContent = text;
+    btn.disabled = false;
+  };
+
+  // Validate
+  if (!displayName) return showErr('Vui lòng nhập tên hiển thị.');
+  if (!username || !/^[a-zA-Z0-9_]{3,}$/.test(username))
+    return showErr('Username không hợp lệ. Tối thiểu 3 ký tự, chỉ dùng chữ, số, _');
+  if (!email) return showErr('Vui lòng nhập email.');
+  if (password.length < 6) return showErr('Mật khẩu tối thiểu 6 ký tự.');
+  if (password !== confirm) return showErr('Mật khẩu xác nhận không khớp.');
+
+  btn.disabled = true;
+  msg.style.color = '#e8c97a';
+  msg.textContent = 'Đang tạo tài khoản…';
+
+  // Kiểm tra username đã tồn tại chưa
+  const { data: existing } = await sb
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .maybeSingle();
+
+  if (existing) return showErr('Username đã được sử dụng. Vui lòng chọn tên khác.');
+
+  // Đăng ký tài khoản
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    if (error.message.includes('already registered') || error.message.includes('already been registered'))
+      return showErr('Email này đã được đăng ký rồi.');
+    return showErr(error.message);
+  }
+
+  const userId = data.user?.id;
+  if (!userId) return showErr('Có lỗi xảy ra, vui lòng thử lại.');
+
+  // Tạo profile
+  const { error: profileErr } = await sb.from('profiles').upsert({
+    id:           userId,
+    username:     username,
+    display_name: displayName,
+    role:         'user',
+    created_at:   new Date().toISOString()
+  });
+
+  if (profileErr) {
+    console.error('Profile error:', profileErr);
+    // Không dừng — tài khoản đã tạo xong, chỉ profile lỗi
+  }
+
+  msg.style.color = '#6bcb77';
+  msg.innerHTML = '✓ Đăng ký thành công!<br><span style="font-size:11px;color:#d4c9b8;">Kiểm tra email để xác nhận tài khoản (nếu cần), sau đó đăng nhập.</span>';
+
+  setTimeout(() => window.location.href = 'login.html', 2500);
+}
 </script>
 </body>
 </html>
