@@ -306,8 +306,8 @@ footer{background:var(--smoke2);border-top:1px solid var(--border-gold);margin-t
     <div class="auth-required-title">Bạn cần đăng nhập</div>
     <div class="auth-required-desc">Đăng nhập để xem danh sách truyện đang theo dõi và lưu những bộ truyện bạn muốn đọc tiếp.</div>
     <div class="auth-required-actions">
-      <a href="login.html" class="btn-read">Đăng Nhập</a>
-      <a href="dangky.html" class="btn-login">Đăng Ký</a>
+      <a href="login.html?force=1" class="btn-read">Đăng Nhập</a>
+      <a href="dangky.html?force=1" class="btn-login">Đăng Ký</a>
     </div>
   </div>
 </div>
@@ -370,7 +370,7 @@ footer{background:var(--smoke2);border-top:1px solid var(--border-gold);margin-t
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>
   </button>
 
-  <a href="login.html" class="btn-login" id="loginLink">Đăng Nhập</a>
+<a href="login.html?force=1" class="btn-login" id="loginLink">Đăng Nhập</a>
 
   <span id="welcomeUser" style="display:none;color:var(--gold-light);font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;"></span>
 <a href="admin.html" id="adminBtn" class="btn-login" style="display:none;color:var(--gold);border-color:var(--gold);">⚙ Admin</a>
@@ -1166,8 +1166,8 @@ function renderTrackedBooks() {
           <div class="feat-title">Đăng nhập để xem truyện đang theo dõi</div>
           <div class="feat-desc">Sau khi theo dõi truyện, danh sách sẽ hiện ở đây để bạn quay lại nhanh.</div>
           <div class="feat-meta" style="margin-top:16px;">
-            <a href="login.html" class="btn-read" style="text-decoration:none;">Đăng Nhập</a>
-            <a href="dangky.html" class="btn-login" style="text-decoration:none;">Đăng Ký</a>
+            <a href="login.html?force=1" class="btn-read" style="text-decoration:none;">Đăng Nhập</a>
+            <a href="dangky.html?force=1" class="btn-login" style="text-decoration:none;">Đăng Ký</a>
           </div>
         </div>
       </div>`;

@@ -350,7 +350,7 @@ function refreshFollowButton() {
 if (followBtn) {
   followBtn.addEventListener('click', function() {
     if (!currentUser) {
-      window.location.href = 'login.html';
+      window.location.href = 'login.html?force=1';
       return;
     }
 

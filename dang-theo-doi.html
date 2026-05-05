@@ -228,7 +228,7 @@ body::before{
     <a href="index.html" class="brand">Novel<span>Lore</span></a>
     <div class="top-actions">
       <a href="index.html" class="ghost-btn">Trang Chủ</a>
-      <a href="login.html" class="ghost-btn" id="loginLink">Đăng Nhập</a>
+      <a href="login.html?force=1" class="ghost-btn" id="loginLink">Đăng Nhập</a>
       <span id="welcomeUser" style="display:none;color:var(--gold-light);font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;"></span>
       <button id="logoutBtn" class="ghost-btn" style="display:none;background:none;cursor:pointer;">Đăng Xuất</button>
     </div>
@@ -345,7 +345,7 @@ if (currentUser) {
 if (logoutBtn) {
   logoutBtn.addEventListener('click', function() {
     logoutUser();
-    window.location.href = 'login.html';
+    window.location.href = 'login.html?force=1';
   });
 }
 
@@ -356,8 +356,8 @@ function renderTrackedPage() {
         <div class="empty-title">Bạn cần đăng nhập</div>
         <div class="empty-desc">Đăng nhập để xem các bộ truyện đang theo dõi và lưu lại những truyện bạn muốn quay lại sau.</div>
         <div class="empty-actions">
-          <a href="login.html" class="main-btn">Đăng Nhập</a>
-          <a href="dangky.html" class="ghost-btn">Đăng Ký</a>
+          <a href="login.html?force=1" class="main-btn">Đăng Nhập</a>
+          <a href="dangky.html?force=1" class="ghost-btn">Đăng Ký</a>
         </div>
       </div>`;
     return;

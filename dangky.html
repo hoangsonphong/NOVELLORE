@@ -171,7 +171,7 @@ body::before{
   <p id="registerMsg"></p>
 
   <div class="login-link">
-    Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+    Đã có tài khoản? <a href="login.html?force=1">Đăng nhập</a>
   </div>
 </div>
 
@@ -183,9 +183,13 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 // Nếu đã đăng nhập thì về trang chủ
-sb.auth.getSession().then(({ data }) => {
-  if (data.session) window.location.href = 'index.html';
-});
+const urlParams = new URLSearchParams(window.location.search);
+const isForced = urlParams.get('force') === '1';
+if (!isForced) {
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) window.location.href = 'index.html';
+  });
+}
 
 // ---- Kiểm tra độ mạnh mật khẩu ----
 document.getElementById('regPassword').addEventListener('input', function() {
