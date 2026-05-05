@@ -259,20 +259,42 @@ body::before{
 </main>
 
 <script>
-const storyLinks = {
-  'Vạn Cổ Thần Vương': 'van-co-than-vuong.html'
+// Dữ liệu chi tiết cho các truyện đã biết — thêm truyện mới vào đây
+const bookData = {
+  'Vạn Cổ Thần Vương':       { genre:'Tiên Hiệp',    chapter:'Ch. 2.847',        cv:'cv-crimson', desc:'Từ một thiếu niên bị khinh rẻ, Diệp Trần từng bước vươn lên và chạm tới cảnh giới thần vương.', link:'van-co-than-vuong.html' },
+  'Thiên Đạo Đồ':            { genre:'Huyền Huyễn',  chapter:'Ch. 1.203',        cv:'cv-navy',    desc:'Khi bản đồ thiên đạo hiện ra trước mắt, số phận cả vũ trụ đặt lên vai một chàng trai trẻ không ai ngờ tới.', link:'thien-dao-do.html' },
+  'Thiên Đạo Đồ Thư Quán':   { genre:'Huyền Huyễn',  chapter:'Ch. 1.203',        cv:'cv-navy',    desc:'Hành trình tu tiên kỳ bí trong thư viện thiên đạo huyền bí.', link:'thien-dao-do.html' },
+  'Lâm Gia Hữu Nữ':          { genre:'Ngôn Tình',    chapter:'Ch. 880 — Hoàn',   cv:'cv-forest',  desc:'Câu chuyện tình yêu ngọt ngào và xúc động của cô gái nhà họ Lâm.', link:'lam-gia-huu-nu.html' },
+  'Độc Bộ Thiên Hạ':         { genre:'Kiếm Hiệp',    chapter:'Ch. 3.120',        cv:'cv-amber',   desc:'Một kiếm khách độc hành ngang dọc giang hồ, danh chấn thiên hạ.', link:'doc-bo-thien-ha.html' },
+  'Ngân Hà Truyền Thuyết':   { genre:'Khoa Huyễn',   chapter:'Ch. 445',          cv:'cv-violet',  desc:'Huyền thoại về dải ngân hà và những nền văn minh bí ẩn ngoài vũ trụ.', link:'ngan-ha-truyen-thuyet.html' },
+  'Ngân Hà Truyện':          { genre:'Khoa Huyễn',   chapter:'Ch. 980',          cv:'cv-violet',  desc:'Câu chuyện tình yêu lãng mạn trải dài như dải ngân hà.', link:'ngan-ha-truyen.html' },
+  'Đế Quốc Tái Sinh':        { genre:'Lịch Sử',      chapter:'Ch. 672',          cv:'cv-navy',    desc:'Một đế chế sụp đổ được tái sinh qua bàn tay của một nhân vật thiên tài.', link:'de-quoc-tai-sinh.html' },
+  'Hệ Thống Vô Song':        { genre:'Hệ Thống',     chapter:'Ch. 1.880',        cv:'cv-crimson', desc:'Sở hữu hệ thống vô địch, anh ta bước trên con đường không ai có thể ngăn cản.', link:'he-thong-vo-song.html' },
+  'Xuyên Về Thời Đường':     { genre:'Xuyên Không',  chapter:'Ch. 1.204 — Hoàn', cv:'cv-forest',  desc:'Một linh hồn hiện đại xuyên về thời Đường, mang trí tuệ từ tương lai để viết nên trang sử mới.', link:'xuyen-ve-thoi-duong.html' },
+  'Đô Thị Siêu Năng':        { genre:'Đô Thị',       chapter:'Ch. 3.560',        cv:'cv-violet',  desc:'Giữa lòng đô thị hiện đại, một thanh niên bình thường thức tỉnh sức mạnh siêu năng bí ẩn.', link:'do-thi-sieu-nang.html' },
+  'Mạt Thế Chí Tôn':         { genre:'Mạt Thế',      chapter:'Ch. 920',          cv:'cv-amber',   desc:'Thế giới tận thế bùng nổ, chỉ có kẻ mạnh nhất mới có thể sống sót và đứng trên đỉnh cao.', link:'mat-the-chi-ton.html' },
+  'Tiên Nghịch':             { genre:'Tu Tiên',      chapter:'Ch. 2.200 — Hoàn', cv:'cv-crimson', desc:'Nghịch thiên mà hành, phá vỡ mọi quy tắc tu tiên để đạt cảnh giới tối thượng.', link:'#' },
+  'Tuyết Dao Ký':            { genre:'Kiếm Hiệp',    chapter:'Ch. 1.680 — Hoàn', cv:'cv-navy',    desc:'Thanh kiếm trắng như tuyết và ký ức về một tình yêu không thể nào quên.', link:'#' },
+  'Thần Mộ':                 { genre:'Huyền Huyễn',  chapter:'Ch. 3.360 — Hoàn', cv:'cv-violet',  desc:'Lăng mộ của thần linh chứa đựng bí mật ngàn năm chờ người có duyên khám phá.', link:'#' },
+  'Đế Bá':                   { genre:'Huyền Huyễn',  chapter:'Ch. 4.280 — Hoàn', cv:'cv-amber',   desc:'Bá chủ thiên hạ, đứng trên đỉnh cao của mọi cảnh giới, không ai dám chống lại.', link:'#' },
+  'Linh Vực':                { genre:'Tu Tiên',      chapter:'Ch. 3.000 — Hoàn', cv:'cv-forest',  desc:'Cảnh giới linh vực huyền bí, nơi sức mạnh và trí tuệ quyết định sự sống còn.', link:'#' },
+  'Kiếm Đế Vô Danh':        { genre:'Kiếm Hiệp',    chapter:'Ch. 2.100',        cv:'cv-crimson', desc:'Một kiếm thủ vô danh bước ra từ bóng tối, danh tiếng chấn động thiên hạ mà không ai biết thân thế.', link:'#' },
+  'Long Vương Giáng Thế':    { genre:'Huyền Huyễn',  chapter:'Ch. 880',          cv:'cv-navy',    desc:'Vương giả của loài rồng đầu thai vào thân xác phàm nhân, thức tỉnh sức mạnh cổ đại.', link:'#' },
+  'Trọng Sinh Chi Lộ':       { genre:'Xuyên Không',  chapter:'Ch. 1.440',        cv:'cv-forest',  desc:'Được trọng sinh về quá khứ, cô gái quyết không lặp lại sai lầm và viết nên trang đời mới.', link:'#' },
+  'Cổ Chân Ký':              { genre:'Tiên Hiệp',    chapter:'Ch. 3.600 — Hoàn', cv:'cv-amber',   desc:'Hành trình của một tu sĩ bình thường trải qua vạn năm gian khổ để đạt cảnh giới cổ chân bất diệt.', link:'#' },
 };
 
-const bookData = {
-  'Vạn Cổ Thần Vương': {
-    title: 'Vạn Cổ Thần Vương',
-    genre: 'Tiên Hiệp',
-    chapter: 'Chương 2.847',
-    cv: 'cv-crimson',
-    desc: 'Từ một thiếu niên bị khinh rẻ, Diệp Trần từng bước vươn lên và chạm tới cảnh giới thần vương.',
-    link: 'van-co-than-vuong.html'
-  }
-};
+const cvList = ['cv-crimson','cv-navy','cv-forest','cv-amber','cv-violet'];
+
+// Tự động tạo link từ tên truyện nếu chưa có trong bookData
+function titleToLink(title) {
+  return title
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u0111/g,'d')
+    .replace(/[^a-z0-9\s]/g,'')
+    .trim().replace(/\s+/g,'-') + '.html';
+}
 
 const svgArt = `<svg width="60" height="88" viewBox="0 0 60 88" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="40" r="18" stroke="#c9a84c" stroke-width="1" opacity=".5"/><line x1="30" y1="10" x2="30" y2="70" stroke="#c9a84c" stroke-width=".7" opacity=".4"/><circle cx="30" cy="40" r="5" fill="#8b1a2f" opacity=".8"/><path d="M22 74 Q30 70 38 74 Q30 78 22 74Z" fill="#c9a84c" opacity=".4"/></svg>`;
 
@@ -366,19 +388,23 @@ function renderTrackedPage() {
 
   trackedContent.innerHTML = `
     <section class="tracked-grid">
-      ${visibleTitles.map(title => {
-        const book = bookData[title];
-        if (!book) return '';
+      ${visibleTitles.map((title, i) => {
+        const book = bookData[title] || {};
+        const link    = book.link    || titleToLink(title);
+        const cv      = book.cv      || cvList[i % cvList.length];
+        const genre   = book.genre   || 'Truyện';
+        const chapter = book.chapter || '';
+        const desc    = book.desc    || 'Nhấn để tiếp tục đọc bộ truyện này.';
         return `
-          <a href="${book.link}" class="tracked-card">
-            <div class="tracked-cover ${book.cv}">${svgArt}</div>
+          <a href="${link}" class="tracked-card">
+            <div class="tracked-cover ${cv}">${svgArt}</div>
             <div class="tracked-info">
               <div class="tracked-label">Đang theo dõi</div>
-              <div class="tracked-title">${book.title}</div>
-              <div class="tracked-desc">${book.desc}</div>
+              <div class="tracked-title">${title}</div>
+              <div class="tracked-desc">${desc}</div>
               <div class="tracked-meta">
-                <span class="tracked-chip">${book.genre}</span>
-                <span class="tracked-chip">${book.chapter}</span>
+                <span class="tracked-chip">${genre}</span>
+                ${chapter ? `<span class="tracked-chip">${chapter}</span>` : ''}
               </div>
             </div>
           </a>`;
