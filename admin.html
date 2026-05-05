@@ -425,12 +425,7 @@ checkAdmin().then(ok => { if (ok) initAdminPage(); });
 
 <script>
 // ── LocalStorage helpers (vẫn dùng cho customStories) ──
-function getCustomStories() {
-  return JSON.parse(localStorage.getItem('customStories')) || [];
-}
-function saveCustomStories(stories) {
-  localStorage.setItem('customStories', JSON.stringify(stories));
-}
+
 
 // ── Các element ──
 const userList    = document.getElementById('userList');
@@ -496,20 +491,21 @@ function renderTracked(users) {
 }
 
 // ── Render truyện custom ──
-function renderStories() {
-  const stories = getCustomStories();
+async function renderStories() {
+  const { data: stories, error } = await sb
+    .from('stories').select('*').order('created_at', { ascending: false });
   if (!storyList) return;
-  if (!stories.length) {
+  if (!stories || !stories.length) {
     storyList.innerHTML = `<div class="row">
       <strong>Chưa có truyện bổ sung</strong>
-      <span>Thêm truyện ở form phía trên, trang chủ sẽ đọc dữ liệu này ngay.</span>
+      <span>Thêm truyện ở form phía trên.</span>
     </div>`;
     return;
   }
-  storyList.innerHTML = stories.map((s, i) => `
-    <div class="row" data-story-index="${i}">
-      <strong>${s.t}</strong>
-      <span>Thể loại: ${s.g} | Chương: ${s.c}</span>
+  storyList.innerHTML = stories.map(s => `
+    <div class="row" data-story-id="${s.id}">
+      <strong>${s.title}</strong>
+      <span>Thể loại: ${s.genre} | Chương: ${s.chapter}</span>
       <span>Link: ${s.link || '#'}</span>
       <div class="story-tools">
         <button type="button" class="danger-btn delete-story-btn">Xóa Truyện</button>
@@ -536,7 +532,7 @@ async function initAdminPage() {
   renderStats(users);
   renderUsers(users);
   renderTracked(users);
-  renderStories();
+  await renderStories();
 
   // Nâng quyền admin
   if (userList) {
@@ -559,7 +555,7 @@ async function initAdminPage() {
 
   // Thêm truyện
   if (storyForm) {
-    storyForm.addEventListener('submit', function(e) {
+    storyForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       const title   = document.getElementById('storyTitle').value.trim();
       const genre   = document.getElementById('storyGenre').value.trim();
@@ -570,30 +566,34 @@ async function initAdminPage() {
       const desc    = document.getElementById('storyDesc').value.trim();
       const link    = document.getElementById('storyLink').value.trim();
 
-      const stories = getCustomStories();
-      if (stories.some(s => s.t.toLowerCase() === title.toLowerCase())) {
-        storyMsg.textContent = 'Ten truyen da ton tai.';
-        return;
-      }
-      stories.push({ t: title, g: genre, c: chapter, badge, cv: cover, stars, desc, link });
-      saveCustomStories(stories);
-      storyForm.reset();
-      storyMsg.textContent = 'Da them truyen moi.';
-      renderStories();
+const { error } = await sb.from('stories').insert({
+  title, genre, chapter,
+  cover, badge, stars,
+  description: desc,
+  link: link || '#',
+  created_by: currentUser.id
+});
+if (error) {
+  storyMsg.textContent = 'Lỗi: ' + error.message;
+  return;
+}
+storyForm.reset();
+storyMsg.textContent = 'Đã thêm truyện mới.';
+await renderStories();
     });
   }
 
   // Xóa truyện
   if (storyList) {
-    storyList.addEventListener('click', function(e) {
+    storyList.addEventListener('click', async function(e) {
       const btn = e.target.closest('.delete-story-btn');
       if (!btn) return;
-      const row = btn.closest('[data-story-index]');
-      if (!row) return;
-      const idx = Number(row.dataset.storyIndex);
-      const stories = getCustomStories().filter((_, i) => i !== idx);
-      saveCustomStories(stories);
-      renderStories();
+      const row = btn.closest('[data-story-id]');
+if (!row) return;
+const id = row.dataset.storyId;
+if (!confirm('Xóa truyện này?')) return;
+await sb.from('stories').delete().eq('id', id);
+await renderStories();
     });
   }
   
