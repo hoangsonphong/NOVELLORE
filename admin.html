@@ -275,12 +275,41 @@ body::before{
 </style>
 </head>
 <body>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-if (!currentUser || currentUser.role !== 'admin') {
-  alert('Bạn không có quyền truy cập trang admin.');
-  window.location.href = 'index.html';
+const SUPABASE_URL  = 'https://snimdewrrausajqjpcqi.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuaW1kZXdycmF1c2FqcWpwY3FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODUwNjQsImV4cCI6MjA5MzQ2MTA2NH0.C4KJvcP_7Nblxw7Tfce5osEW36L5iazMunY2fQBfcT4';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let currentUser = null;
+
+async function checkAdmin() {
+  const { data: sessionData } = await sb.auth.getSession();
+  const sessionUser = sessionData?.session?.user;
+  if (!sessionUser) {
+    alert('Ban can dang nhap.');
+    window.location.href = 'login.html';
+    return false;
+  }
+  const { data: profile } = await sb
+    .from('profiles').select('username,display_name,role')
+    .eq('id', sessionUser.id).single();
+  if (!profile || profile.role !== 'admin') {
+    alert('Ban khong co quyen truy cap trang admin.');
+    window.location.href = 'index.html';
+    return false;
+  }
+  currentUser = {
+    id: sessionUser.id,
+    email: sessionUser.email,
+    name: profile.display_name || profile.username || sessionUser.email,
+    role: 'admin'
+  };
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  return true;
 }
+
+checkAdmin().then(ok => { if (ok) initAdminPage(); });
 </script>
 
 <header class="topbar">
@@ -395,201 +424,188 @@ if (!currentUser || currentUser.role !== 'admin') {
 </main>
 
 <script>
-function getUsers() {
-  return JSON.parse(localStorage.getItem('users')) || [];
-}
-
-function saveUsers(nextUsers) {
-  localStorage.setItem('users', JSON.stringify(nextUsers));
-}
-
+// ── LocalStorage helpers (vẫn dùng cho customStories) ──
 function getCustomStories() {
   return JSON.parse(localStorage.getItem('customStories')) || [];
 }
-
 function saveCustomStories(stories) {
   localStorage.setItem('customStories', JSON.stringify(stories));
 }
 
-function logoutUser() {
-  localStorage.removeItem('currentUser');
-}
-
-const userList = document.getElementById('userList');
+// ── Các element ──
+const userList    = document.getElementById('userList');
 const trackedList = document.getElementById('trackedList');
-const statUsers = document.getElementById('statUsers');
-const statAdmins = document.getElementById('statAdmins');
-const statAdmin = document.getElementById('statAdmin');
-const logoutBtn = document.getElementById('logoutBtn');
-const storyForm = document.getElementById('storyForm');
-const storyMsg = document.getElementById('storyMsg');
-const storyList = document.getElementById('storyList');
+const statUsers   = document.getElementById('statUsers');
+const statAdmins  = document.getElementById('statAdmins');
+const statAdmin   = document.getElementById('statAdmin');
+const logoutBtn   = document.getElementById('logoutBtn');
+const storyForm   = document.getElementById('storyForm');
+const storyMsg    = document.getElementById('storyMsg');
+const storyList   = document.getElementById('storyList');
 
-function renderStats() {
-  const users = getUsers();
-  if (statUsers) {
-    statUsers.textContent = users.length;
-  }
-
-  if (statAdmins) {
-    statAdmins.textContent = users.filter(user => user.role === 'admin').length;
-  }
+// ── Lấy danh sách users từ Supabase ──
+async function fetchUsers() {
+  const { data, error } = await sb
+    .from('profiles')
+    .select('id, username, display_name, role');
+  if (error) { console.error(error); return []; }
+  return data || [];
 }
 
-if (statAdmin && currentUser) {
-  statAdmin.textContent = currentUser.name || currentUser.email;
+// ── Render stats ──
+async function renderStats(users) {
+  if (statAdmin && currentUser) statAdmin.textContent = currentUser.name || currentUser.email;
+  if (statUsers) statUsers.textContent = users.length;
+  if (statAdmins) statAdmins.textContent = users.filter(u => u.role === 'admin').length;
 }
 
-function renderUsers() {
-  const users = getUsers();
+// ── Render danh sách người dùng ──
+function renderUsers(users) {
   if (!userList) return;
-
-  userList.innerHTML = users.map(user => `
-    <div class="row" data-email="${user.email}">
-      <strong>${user.name}</strong>
-      <span>Email: ${user.email}</span>
-      <span class="role-badge">${user.role || 'user'}</span>
-      ${user.role === 'admin' ? '' : '<button type="button" class="admin-action-btn promote-btn">Nâng Thành Admin</button>'}
+  if (!users.length) {
+    userList.innerHTML = '<div class="row"><strong>Chưa có người dùng nào</strong></div>';
+    return;
+  }
+  userList.innerHTML = users.map(u => `
+    <div class="row" data-user-id="${u.id}">
+      <strong>${u.display_name || u.username || 'Ẩn danh'}</strong>
+      <span>Username: ${u.username || '-'}</span>
+      <span class="role-badge">${u.role || 'user'}</span>
+      ${u.role !== 'admin' ? '<button type="button" class="admin-action-btn promote-btn">Nâng Thành Admin</button>' : ''}
     </div>
   `).join('');
 }
 
-function renderTracked() {
-  const users = getUsers();
+// ── Render theo dõi truyện (vẫn từ localStorage vì chưa lên Supabase) ──
+function renderTracked(users) {
   if (!trackedList) return;
-
-  const trackedRows = users.map(user => {
-    const tracked = JSON.parse(localStorage.getItem(`trackedBooks:${user.email}`)) || [];
+  if (!users.length) {
+    trackedList.innerHTML = '<div class="row"><strong>Chưa có dữ liệu</strong></div>';
+    return;
+  }
+  trackedList.innerHTML = users.map(u => {
+    // Thử cả id và email để tìm tracked books
+    const byId    = JSON.parse(localStorage.getItem('trackedBooks:' + u.id)) || [];
+    const tracked = byId.length ? byId : [];
     return `
       <div class="row">
-        <strong>${user.name}</strong>
-        <span>Email: ${user.email}</span>
-        <span>Đang theo dõi: ${tracked.length ? tracked.join(', ') : 'Chưa có truyện nào'}</span>
-      </div>
-    `;
+        <strong>${u.display_name || u.username || 'Ẩn danh'}</strong>
+        <span>Đang theo dõi: ${tracked.length ? tracked.join(', ') : 'Chưa có'}</span>
+      </div>`;
   }).join('');
-
-  trackedList.innerHTML = trackedRows || `
-    <div class="row">
-      <strong>Chưa có dữ liệu</strong>
-      <span>Hiện chưa có người dùng nào trong hệ thống.</span>
-    </div>
-  `;
 }
 
+// ── Render truyện custom ──
 function renderStories() {
   const stories = getCustomStories();
   if (!storyList) return;
-
   if (!stories.length) {
-    storyList.innerHTML = `
-      <div class="row">
-        <strong>Chưa có truyện bổ sung</strong>
-        <span>Admin thêm truyện ở form phía trên, trang chủ sẽ đọc dữ liệu này ngay.</span>
-      </div>`;
+    storyList.innerHTML = `<div class="row">
+      <strong>Chưa có truyện bổ sung</strong>
+      <span>Thêm truyện ở form phía trên, trang chủ sẽ đọc dữ liệu này ngay.</span>
+    </div>`;
     return;
   }
-
-  storyList.innerHTML = stories.map((story, index) => `
-    <div class="row" data-story-index="${index}">
-      <strong>${story.t}</strong>
-      <span>Thể loại: ${story.g}</span>
-      <span>Chương: ${story.c}</span>
-      <span>Link: ${story.link || '#'}</span>
+  storyList.innerHTML = stories.map((s, i) => `
+    <div class="row" data-story-index="${i}">
+      <strong>${s.t}</strong>
+      <span>Thể loại: ${s.g} | Chương: ${s.c}</span>
+      <span>Link: ${s.link || '#'}</span>
       <div class="story-tools">
         <button type="button" class="danger-btn delete-story-btn">Xóa Truyện</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-renderStats();
-renderUsers();
-renderTracked();
-renderStories();
+// ── Nâng quyền admin lên Supabase ──
+async function promoteToAdmin(userId) {
+  const { error } = await sb
+    .from('profiles')
+    .update({ role: 'admin' })
+    .eq('id', userId);
+  if (error) {
+    alert('Lỗi khi nâng quyền: ' + error.message);
+    return false;
+  }
+  return true;
+}
 
-if (userList) {
-  userList.addEventListener('click', function(e) {
-    const button = e.target.closest('.promote-btn');
-    if (!button) return;
+// ── Khởi động trang ──
+async function initAdminPage() {
+  const users = await fetchUsers();
+  renderStats(users);
+  renderUsers(users);
+  renderTracked(users);
+  renderStories();
 
-    const row = button.closest('[data-email]');
-    if (!row) return;
-
-    const email = row.dataset.email;
-    const users = getUsers().map(user => {
-      if (user.email === email) {
-        return { ...user, role: 'admin' };
+  // Nâng quyền admin
+  if (userList) {
+    userList.addEventListener('click', async function(e) {
+      const btn = e.target.closest('.promote-btn');
+      if (!btn) return;
+      const row = btn.closest('[data-user-id]');
+      if (!row) return;
+      const userId = row.dataset.userId;
+      if (!confirm('Nâng tài khoản này thành admin?')) return;
+      const ok = await promoteToAdmin(userId);
+      if (ok) {
+        alert('Da nang quyen admin thanh cong!');
+        const updated = await fetchUsers();
+        renderStats(updated);
+        renderUsers(updated);
       }
-      return user;
     });
+  }
 
-    saveUsers(users);
-    renderStats();
-    renderUsers();
-    renderTracked();
-  });
-}
+  // Thêm truyện
+  if (storyForm) {
+    storyForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const title   = document.getElementById('storyTitle').value.trim();
+      const genre   = document.getElementById('storyGenre').value.trim();
+      const chapter = document.getElementById('storyChapter').value.trim();
+      const cover   = document.getElementById('storyCover').value;
+      const badge   = document.getElementById('storyBadge').value;
+      const stars   = document.getElementById('storyStars').value;
+      const desc    = document.getElementById('storyDesc').value.trim();
+      const link    = document.getElementById('storyLink').value.trim();
 
-if (storyForm) {
-  storyForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const title = document.getElementById('storyTitle').value.trim();
-    const genre = document.getElementById('storyGenre').value.trim();
-    const chapter = document.getElementById('storyChapter').value.trim();
-    const cover = document.getElementById('storyCover').value;
-    const badge = document.getElementById('storyBadge').value;
-    const stars = document.getElementById('storyStars').value;
-    const desc = document.getElementById('storyDesc').value.trim();
-    const link = document.getElementById('storyLink').value.trim();
-
-    const stories = getCustomStories();
-    const existed = stories.some(story => story.t.toLowerCase() === title.toLowerCase());
-    if (existed) {
-      storyMsg.textContent = 'Tên truyện đã tồn tại.';
-      return;
-    }
-
-    stories.push({
-      t: title,
-      g: genre,
-      c: chapter,
-      badge,
-      cv: cover,
-      stars,
-      desc,
-      link
+      const stories = getCustomStories();
+      if (stories.some(s => s.t.toLowerCase() === title.toLowerCase())) {
+        storyMsg.textContent = 'Ten truyen da ton tai.';
+        return;
+      }
+      stories.push({ t: title, g: genre, c: chapter, badge, cv: cover, stars, desc, link });
+      saveCustomStories(stories);
+      storyForm.reset();
+      storyMsg.textContent = 'Da them truyen moi.';
+      renderStories();
     });
+  }
 
-    saveCustomStories(stories);
-    storyForm.reset();
-    storyMsg.textContent = 'Đã thêm truyện mới.';
-    renderStories();
-  });
-}
-
-if (storyList) {
-  storyList.addEventListener('click', function(e) {
-    const button = e.target.closest('.delete-story-btn');
-    if (!button) return;
-
-    const row = button.closest('[data-story-index]');
-    if (!row) return;
-
-    const index = Number(row.dataset.storyIndex);
-    const stories = getCustomStories().filter((_, i) => i !== index);
-    saveCustomStories(stories);
-    renderStories();
-  });
-}
-
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', function() {
-    logoutUser();
-    window.location.href = 'login.html';
-  });
+  // Xóa truyện
+  if (storyList) {
+    storyList.addEventListener('click', function(e) {
+      const btn = e.target.closest('.delete-story-btn');
+      if (!btn) return;
+      const row = btn.closest('[data-story-index]');
+      if (!row) return;
+      const idx = Number(row.dataset.storyIndex);
+      const stories = getCustomStories().filter((_, i) => i !== idx);
+      saveCustomStories(stories);
+      renderStories();
+    });
+  }
+  
+  // Đăng xuất
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function() {
+      await sb.auth.signOut();
+      localStorage.removeItem('currentUser');
+      window.location.href = 'login.html';
+    });
+  }
 }
 </script>
 </body>
-</html>
+</html>0
