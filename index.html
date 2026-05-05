@@ -1239,9 +1239,19 @@ if (currentUser) {
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener('click', function() {
-    logoutUser();
-    window.location.href = 'login.html';
+  logoutBtn.addEventListener('click', async function() {
+    localStorage.removeItem('currentUser');
+    // Xóa Supabase session nếu có SDK
+    if (window.supabase) {
+      try {
+        const _sb = supabase.createClient(
+          'https://snimdewrrausajqjpcqi.supabase.co',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuaW1kZXdycmF1c2FqcWpwY3FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODUwNjQsImV4cCI6MjA5MzQ2MTA2NH0.C4KJvcP_7Nblxw7Tfce5osEW36L5iazMunY2fQBfcT4'
+        );
+        await _sb.auth.signOut();
+      } catch(e) {}
+    }
+    window.location.href = 'login.html?logout=1';
   });
 }
 
@@ -1329,5 +1339,7 @@ document.querySelectorAll('.nav-genre-link').forEach(link => {
 </script>
 
 
+<!-- Supabase SDK cho logout -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@ body::before{
       <label>Mật khẩu</label>
       <input type="password" id="loginPassword" required autocomplete="current-password"/>
     </div>
-    <button type="submit" class="login-btn" id="loginBtn">Đăng Nhập</button>
+    <button type="button" class="login-btn" id="loginBtn" onclick="handleLogin()">Đăng Nhập</button>
   </form>
 
   <p id="loginMsg"></p>
@@ -96,15 +96,33 @@ const loginForm = document.getElementById('loginForm');
 const loginMsg  = document.getElementById('loginMsg');
 const loginBtn  = document.getElementById('loginBtn');
 
-// Nếu đã đăng nhập rồi thì chuyển thẳng về trang chủ
-sb.auth.getSession().then(({ data }) => {
-  if (data.session) window.location.href = 'index.html';
-});
+// Kiểm tra: nếu URL có ?logout=1 thì xóa session
+// Nếu đang ở trang login mà có session → chỉ redirect nếu KHÔNG phải do bấm "Đăng Nhập" lại
+const urlParams = new URLSearchParams(window.location.search);
+const isLogout = urlParams.get('logout') === '1';
+const isForced = urlParams.get('force') === '1';
 
-loginForm.addEventListener('submit', async function(e) {
-  e.preventDefault();
+if (isLogout) {
+  // Vừa đăng xuất → xóa sạch session rồi hiện form
+  sb.auth.signOut().then(() => {
+    localStorage.removeItem('currentUser');
+  });
+} else if (!isForced) {
+  // Bình thường: nếu còn session thì về trang chủ
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) window.location.href = 'index.html';
+  });
+}
+
+async function handleLogin() {
   const email    = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    loginMsg.style.color = '#ff8a8a';
+    loginMsg.textContent = 'Vui lòng nhập đầy đủ email và mật khẩu.';
+    return;
+  }
 
   loginBtn.disabled = true;
   loginMsg.style.color = '#e8c97a';
@@ -114,7 +132,7 @@ loginForm.addEventListener('submit', async function(e) {
 
   if (error) {
     loginMsg.style.color = '#ff8a8a';
-    loginMsg.textContent = error.message.includes('Invalid')
+    loginMsg.textContent = error.message.includes('Invalid') || error.message.includes('invalid')
       ? 'Sai email hoặc mật khẩu.'
       : error.message;
     loginBtn.disabled = false;
@@ -126,9 +144,8 @@ loginForm.addEventListener('submit', async function(e) {
     .from('profiles')
     .select('username, display_name, role')
     .eq('id', data.user.id)
-    .single();
+    .maybeSingle();
 
-  // Lưu thông tin gọn vào localStorage để index.html đọc nhanh
   localStorage.setItem('currentUser', JSON.stringify({
     id:    data.user.id,
     email: data.user.email,
@@ -136,8 +153,17 @@ loginForm.addEventListener('submit', async function(e) {
     role:  profile?.role || 'user'
   }));
 
+  loginMsg.style.color = '#6bcb77';
   loginMsg.textContent = 'Đăng nhập thành công. Đang chuyển trang…';
   setTimeout(() => window.location.href = 'index.html', 900);
+}
+
+// Cho phép bấm Enter để đăng nhập
+document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
 });
 </script>
 </body>
